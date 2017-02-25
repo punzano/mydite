@@ -1,0 +1,82 @@
+<dom-module id="internal-help">
+  <template>
+    <style is="custom-style" include="iron-flex iron-flex-alignment iron-positioning"></style>
+    <style>
+      :host{
+        width: 100%;
+        height: 100%;
+        padding: 0 3%;
+      }
+      paper-dropdown-menu{
+        --paper-input-container-color: #212121;
+        --paper-input-container-input-color: black;
+        --paper-input-container-invalid-color: red;
+        --paper-input-container-focus-color: #3F51B5;
+        --paper-input-container-underline:{ background: #3F51B5; }
+        --paper-input-container-label:{
+          font-family: ubuntu-regular;
+          color: #3F51B5;
+        }
+        --paper-input-container-input:{
+          font-size: 18px;
+        }
+      }
+      h2{
+        font-family: ubuntu-medium-italic;
+        margin-bottom: 5%;
+      }
+
+      .reason-container{
+        width: 100%;
+      }
+      .reason-container .reason-dropdown{
+        width: 35%;
+      }
+
+      .help-text-container{
+        width: 100%;
+      }
+      .help-text-container textarea{
+        width: 100%;
+        height: 50%;
+        margin-bottom: 3%;
+        box-shadow: var(--custom-shadow);
+      }
+      .help-text-container paper-button{
+        color: #fff;
+        background-color: #3F51B5;
+        box-shadow: var(--custom-shadow);
+      }
+    </style>
+
+    <h2>AYUDA</h2>
+    <div class="vertical center-center layout">
+      <div class="reason-container vertical layout">
+        <span>Motivo:</span>
+        <paper-dropdown-menu id="reasonDropdown" class="reason-dropdown field">
+          <paper-listbox class="dropdown-content" selected="0">
+            <paper-item>Consulta sobre asociados</paper-item>
+            <paper-item>Consulta sobre redes sociales</paper-item>
+            <paper-item>Consulta sobre carta de despedida</paper-item>
+            <paper-item>Otro</paper-item>
+          </paper-listbox>
+        </paper-dropdown-menu>
+      </div>
+      <div class="help-text-container vertical center-center layout">
+        <textarea placeholder="Puede escribir aquí su duda o sugerencia y trataremos de resolverla lo antes posible."></textarea>
+        <paper-button class="horizontal center-center layout" raised>Enviar <iron-icon icon="send"></iron-icon></paper-button>
+      </div>
+    </div>
+
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    Polymer({
+      is: 'internal-help',
+      properties: {
+      }
+    });
+  })();
+  </script>
+</dom-module>

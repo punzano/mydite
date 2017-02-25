@@ -1,0 +1,26 @@
+{
+  "name": "polymer-starter-kit",
+  "private": true,
+  "dependencies": {
+    "iron-elements": "PolymerElements/iron-elements#^1.0.0",
+    "neon-elements": "PolymerElements/neon-elements#^1.0.0",
+    "page": "visionmedia/page.js#~1.6.4",
+    "paper-elements": "PolymerElements/paper-elements#^1.0.1",
+    "platinum-elements": "PolymerElements/platinum-elements#^1.1.0",
+    "polymer": "Polymer/polymer#^1.2.0",
+    "jquery": "^2.2.3",
+    "jquery-ui": "^1.11.4",
+    "bootstrap": "^3.3.6",
+    "vaadin-date-picker": "^1.0.0",
+    "gold-zip-input": "PolymerElements/gold-zip-input#^1.0.5",
+    "gold-phone-input": "PolymerElements/gold-phone-input#^1.0.9",
+    "firebase-element": "GoogleWebComponents/firebase-element#^1.0.12",
+    "webcomponentsjs": "^0.7.22",
+    "wysiwyg-e": "*",
+    "polymer-tinymce": "^1.0.0"
+  },
+  "devDependencies": {
+    "web-component-tester": "^4.0.0"
+  },
+  "ignore": []
+}

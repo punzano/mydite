@@ -1,0 +1,256 @@
+<dom-module id="planesPrecios-mydite">
+  <template>
+    <style is="custom-style" include="iron-flex iron-flex-alignment iron-positioning"></style>
+    <style>
+      paper-material{
+        width: 25%;
+        background: var(--light-primary-color);
+      }
+      h4{
+        margin: 3% 0;
+        color: var(--default-primary-color);
+      }
+      ul{ font-size: 16px; }
+      b{ font-size: 18px; }
+      paper-button{
+        font-size: 18px;
+        width: 100%;
+        margin-top: 10%;
+        background: var(--default-primary-color);
+        color: #fff;
+      }
+      hr{ margin: 2% 0 0 0; }
+      a{
+        text-decoration: none;
+      }
+
+      .particular-plans-container{
+        width: 100%;
+      }
+      .particular-plans-content{
+        width: 100%;
+      }
+
+      .company-plans-container{
+        width: 100%;
+        margin-bottom: 2%;
+      }
+      .company-plans-content{
+        width: 100%;
+      }
+
+      .plan-content{
+        padding: 5% 5%;
+      }
+      .features{
+        width: 100%;
+      }
+      .price-container{
+        width: 100%;
+        height: 7%;
+      }
+      /* BREAKPOINTS */
+      /* Computers */
+      @media all and (min-width: 960px) and (max-width: 1024px){}
+      /* Tablets */
+      @media all and (min-width: 769px) and (max-width: 960px){}
+      /* Moviles */
+      @media all and (min-width: 0) and (max-width: 768px){}
+    </style>
+
+    <div class="particular-plans-container vertical center-center layout">
+      <h3>PARTICULARES</h3>
+      <div class="particular-plans-content horizontal around-justified layout">
+        <paper-material elevation="3">
+          <div class="horizontal center-center layout">
+            <h4>GRATIS</h4>
+          </div>
+          <div class="plan-content vertical center-center layout">
+            <div class="features">
+              <b>Características:</b>
+              <ul>
+                <li>Feature 1</li>
+                <li>Feature 2</li>
+                <li>Feature 3</li>
+                <li>Feature 4</li>
+                <li>Feature 5</li>
+              </ul>
+            </div>
+            <div class="price-container horizontal justified layout">
+              <b>Precio:</b>
+              <b>Gratis</b>
+            </div>
+            <a data-route="registro" href="{{baseUrl}}registro">
+              <paper-button raised id="sign-up-free" class="layout horizontal center-center" on-click="redirectToSignUp">
+                <b>REGISTRO&nbsp;</b><iron-icon icon="create"></iron-icon>
+              </paper-button>
+            </a>
+          </div>
+        </paper-material>
+        <paper-material elevation="3">
+          <div class="horizontal center-center layout">
+            <h4>ANUAL</h4>
+          </div>
+          <div class="plan-content vertical center-center layout">
+            <div class="features">
+              <b>Características:</b>
+              <ul>
+                <li>Feature 1</li>
+                <li>Feature 2</li>
+                <li>Feature 3</li>
+                <li>Feature 4</li>
+                <li>Feature 5</li>
+              </ul>
+            </div>
+            <div class="price-container horizontal justified layout">
+              <b>Precio:</b>
+              <b>1,99€/año</b>
+            </div>
+            <a data-route="registro" href="{{baseUrl}}registro">
+              <paper-button raised id="sign-up-anual" class="layout horizontal center-center" on-click="redirectToSignUp">
+                <b>REGISTRO&nbsp;</b><iron-icon icon="create"></iron-icon>
+              </paper-button>
+            </a>
+          </div>
+        </paper-material>
+        <paper-material elevation="3">
+          <div class="horizontal center-center layout">
+            <h4>PAGO ÚNICO</h4>
+          </div>
+          <div class="plan-content vertical center-center layout">
+            <div class="features">
+              <b>Características:</b>
+              <ul>
+                <li>Feature 1</li>
+                <li>Feature 2</li>
+                <li>Feature 3</li>
+                <li>Feature 4</li>
+                <li>Feature 5</li>
+              </ul>
+            </div>
+            <div class="price-container horizontal justified layout">
+              <b>Precio:</b>
+              <b>19,99€</b>
+            </div>
+            <a data-route="registro" href="{{baseUrl}}registro">
+              <paper-button raised id="sign-up-singlePayment" class="layout horizontal center-center" on-click="redirectToSignUp">
+                <b>REGISTRO&nbsp;</b><iron-icon icon="create"></iron-icon>
+              </paper-button>
+            </a>
+          </div>
+        </paper-material>
+      </div>
+    </div>
+    <hr>
+    <div class="company-plans-container vertical center-center layout">
+      <h3>EMPRESAS</h3>
+      <div class="company-plans-content horizontal around-justified layout">
+        <paper-material elevation="3">
+          <div class="horizontal center-center layout">
+            <h4>INFORMES LIGEROS</h4>
+          </div>
+          <div class="plan-content vertical center-center layout">
+            <div class="features">
+              <b>Características:</b>
+              <ul>
+                <li>Feature 1</li>
+                <li>Feature 2</li>
+                <li>Feature 3</li>
+                <li>Feature 4</li>
+                <li>Feature 5</li>
+              </ul>
+            </div>
+            <div class="price-container horizontal justified layout">
+              <b>Precio:</b>
+              <b>0,20€/persona</b>
+            </div>
+            <a data-route="registro" href="{{baseUrl}}registro">
+              <paper-button raised id="sign-up-company" class="layout horizontal center-center" on-click="redirectToSignUp">
+                <b>REGISTRO&nbsp;</b><iron-icon icon="create"></iron-icon>
+              </paper-button>
+            </a>
+          </div>
+        </paper-material>
+        <paper-material elevation="3">
+          <div class="horizontal center-center layout">
+            <h4>INFORMES COMPLETOS</h4>
+          </div>
+          <div class="plan-content vertical center-center layout">
+            <div class="features">
+              <b>Características:</b>
+              <ul>
+                <li>Feature 1</li>
+                <li>Feature 2</li>
+                <li>Feature 3</li>
+                <li>Feature 4</li>
+                <li>Feature 5</li>
+              </ul>
+            </div>
+            <div class="price-container horizontal justified layout">
+              <b>Precio:</b>
+              <div class="vertical layout">
+                <b>0,20€/persona</b>
+                <b>300,00€/columna</b>
+              </div>
+            </div>
+            <a data-route="registro" href="{{baseUrl}}registro">
+              <paper-button raised id="sign-up-company" class="layout horizontal center-center" on-click="redirectToSignUp">
+                <b>REGISTRO&nbsp;</b><iron-icon icon="create"></iron-icon>
+              </paper-button>
+            </a>
+          </div>
+        </paper-material>
+        <paper-material elevation="3">
+          <div class="horizontal center-center layout">
+            <h4>RECEPCIÓN DE INFORMES</h4>
+          </div>
+          <div class="plan-content vertical center-center layout">
+            <div class="features">
+              <b>Características:</b>
+              <ul>
+                <li>Feature 1</li>
+                <li>Feature 2</li>
+                <li>Feature 3</li>
+                <li>Feature 4</li>
+                <li>Feature 5</li>
+              </ul>
+            </div>
+            <div class="price-container horizontal justified layout">
+              <b>Precio:</b>
+              <b>500,00€/informe</b>
+            </div>
+            <a data-route="registro" href="{{baseUrl}}registro">
+              <paper-button raised id="sign-up-company" class="layout horizontal center-center" on-click="redirectToSignUp">
+                <b>REGISTRO&nbsp;</b><iron-icon icon="create"></iron-icon>
+              </paper-button>
+            </a>
+          </div>
+        </paper-material>
+      </div>
+    </div>
+
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    Polymer({
+      is: 'planesPrecios-mydite',
+      properties: {
+      },
+
+      redirectToSignUp: function(e){
+        // this.signuptype = e.target.offsetParent.id;
+        var externalContent = document.querySelector('external-content');
+        if(externalContent.querySelector('iron-meta[id="signUpType"]'))
+          externalContent.removeChild(externalContent.querySelector('iron-meta[id="signUpType"]'));
+        var component = document.createElement('iron-meta');
+        component.setAttribute('id', 'signUpType');
+        component.setAttribute('key', 'signUpType');
+        component.setAttribute('value', e.target.offsetParent.id);
+        externalContent.appendChild(component);
+        // window.location = app.baseUrl + 'registro';
+      }
+    });
+  })();
+  </script>
+</dom-module>

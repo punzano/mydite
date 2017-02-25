@@ -1,0 +1,289 @@
+<dom-module id="company-signup">
+  <template>
+    <style is="custom-style" include="iron-flex iron-flex-alignment iron-positioning"></style>
+    <style>
+      paper-input, vaadin-date-picker, gold-zip-input, gold-phone-input{
+        width: 45%;
+        --paper-input-container-color: #212121;
+        --paper-input-container-input-color: black;
+        --paper-input-container-invalid-color: red;
+        --paper-input-container-focus-color: #3F51B5;
+        --paper-input-container-underline:{ background: #fff; }
+        --paper-input-container-label:{
+          font-size: 16px;
+          font-family: ubuntu-regular;
+        }
+      }
+      vaadin-date-picker{
+        --vaadin-date-picker-overlay:{
+          background-color: #fff;
+          border-radius: 10px;
+        }
+        --vaadin-date-picker-footer:{
+          background-color: #212121;
+          border-bottom-right-radius: 10px;
+        }
+        --vaadin-date-picker-calendar-title:{ color: #212121; }
+      }
+      paper-button{
+        margin: 0 0 0 0;
+        color: #000;
+        background: var(--light-primary-color);
+        font-size: 16px;
+        @apply(--shadow-elevation-6dp);
+      }
+      h3{
+        margin: 0 0;
+        padding: 15px 0;
+        text-align: center;
+        color: var(--default-primary-color);
+      }
+
+      .signup{
+        background: var(--light-primary-color);
+        margin: 2% 10%;
+        border-radius: 1%;
+      }
+
+      .signup-content{
+        padding: 0 10% 5% 10%;
+        color: #000;
+        font-size: 16px;
+      }
+
+      .input-left{ margin-right: 10%; }
+
+      .fit-bottom{
+        color: green;
+      }
+
+      .button-container{
+        margin-top: 5%;
+        width: 35%;
+      }
+      .button-container .send-data{
+        background-color: #3F51B5;
+        color: #fff;
+      }
+
+      /* BREAKPOINTS */
+      /* Computers */
+      @media all and (min-width: 960px) and (max-width: 1024px){
+        .signup-content{ font-size: 14px; }
+      }
+      /* Tablets */
+      @media all and (min-width: 900px) and (max-width: 960px){
+        .signup-content{ font-size: 13px; }
+      }
+      /* Tablets */
+      @media all and (min-width: 0px) and (max-width: 900px){
+        .signup-content{ font-size: 12.5px; }
+      }
+      /* Moviles */
+      @media all and (min-width: 0) and (max-width: 768px){
+        paper-input, vaadin-date-picker, gold-zip-input, gold-phone-input{
+          width: 100%;
+          --paper-input-container-label:{ font-size: 14px; }
+        }
+
+        .input-left{ margin-right: 0; }
+        .input-middle{ margin: 0; }
+      }
+      @media all and (min-width: 0) and (max-width: 600px){
+        paper-button{ font-size: 14px; }
+      }
+    </style>
+
+    <paper-material elevation="3" class="signup">
+      <h3>REGISTRO EMPRESA</h3>
+      <form is="iron-form" id="form" class="signup-content horizontal center-center wrap layout" method="post" action="/sign-up" auto-complete="off">
+        <paper-input id="name" class="input-left"
+          label="Nombre"
+          type="text"
+          auto-validate
+          pattern="[a-zA-Z\sáéíóú]{2,40}"
+          error-message="Debe contener al menos dos letras">
+        </paper-input>
+        <paper-input id="nif"
+          label="NIF"
+          type="text"
+          auto-validate
+          pattern="[0-9]{7,8}[a-zA-Z]{1}"
+          error-message="Debe contener 7-8 dígitos y una letra de control">
+        </paper-input>
+        <paper-input id="activity" class="input-left"
+          label="Actividad"
+          type="text"
+          auto-validate
+          pattern="[a-zA-Z\sáéíóú]{2,40}"
+          error-message="Debe contener al menos dos letras">
+        </paper-input>
+        <paper-input id="province"
+          label="Provincia"
+          type="text"
+          auto-validate
+          pattern="[a-zA-Z\sáéíóú]{2,40}"
+          error-message="Debe contener al menos dos letras">
+        </paper-input>
+        <paper-input id="locality" class="input-left"
+          label="Localidad"
+          type="text"
+          auto-validate
+          pattern="[a-zA-Z\sáéíóú]{2,40}"
+          error-message="Debe contener al menos dos letras">
+        </paper-input>
+        <paper-input id="address"
+          label="Dirección"
+          type="text"
+          auto-validate
+          pattern="[a-zA-Z\sáéíóú]{2,60}"
+          error-message="Debe contener al menos dos letras">
+        </paper-input>
+        <gold-zip-input id="zipCode" class="input-left"
+          label="Código postal"
+          auto-validate>
+        </gold-zip-input>
+        <paper-input id="contactPerson"
+          label="Persona de contacto"
+          type="text"
+          auto-validate
+          pattern="[a-zA-Z\sáéíóú]{2,40}"
+          error-message="Debe contener al menos dos letras">
+        </paper-input>
+        <paper-input id="contactPosition" class="input-left"
+          label="Cargo del contacto"
+          type="text"
+          auto-validate
+          pattern="[a-zA-Z\sáéíóú]{2,40}"
+          error-message="Debe contener al menos dos letras">
+        </paper-input>
+        <paper-input id="contactEmail"
+          label="Correo del contacto"
+          type="email"
+          auto-validate
+          error-message="El formato no coincide con el de un correo eléctronico">
+        </paper-input>
+        <gold-phone-input id="contactPhone" class="input-left"
+          label="Teléfono de contacto"
+          country-code="34"
+          phone-number-pattern="XXX-XX-XX-XX"
+          auto-validate>
+        </gold-phone-input>
+        <gold-phone-input id="contactFax"
+          label="Fax"
+          country-code="34"
+          phone-number-pattern="XXX-XX-XX-XX"
+          auto-validate>
+        </gold-phone-input>
+        <paper-input id="password1" class="input-left"
+          label="Contraseña"
+          type="password"
+          value="{{passInput}}">
+        </paper-input>
+        <paper-input id="password2"
+          label="Repetir contraseña"
+          type="password"
+          pattern="{{passInput}}"
+          auto-validate
+          error-message="Las contraseñas no coinciden">
+        </paper-input>
+        <div class="button-container horizontal center-center layout">
+          <paper-button id="sendFormButton" class="send-data horizontal center-center layout" on-click="validateSignUp">
+            REGÍSTRAME&nbsp;<i class="fa fa-sign-in" aria-hidden="true"></i>
+          </paper-button>
+        </div>
+      </form>
+    </paper-material>
+
+    <paper-toast-error id="fillAllFields" text="Deben rellenarse todos los campos del formulario"></paper-toast-error>
+    <paper-toast-error id="correctInvalids" text="Debe corregir los campos inválidos"></paper-toast-error>
+    <paper-toast-error id="userRegisteredPreviously" text="El usuario introducido ya existe en el sistema"></paper-toast-error>
+    <paper-toast-error id="errorInServer"
+      text="Ha habido un problema en servidor al registrar sus datos. Por favor, vuelva a intentarlo. Si el error persiste póngase en contacto con nosotros
+      a través del email v.punzano@gmail.com">
+    </paper-toast-error>
+    <paper-toast id="userRegisteredCorrectly" class="fit-bottom horizontal center justified layout" duration="0">
+      <span id="label">Ha sido registrado con éxito en el sistema. Para completar el proceso, acceda al correo que le será enviado y pinche en el link de validación.</span>
+      <paper-icon-button class="toast-close-button" icon="cancel" on-click="closePaperToastUserCreated"></paper-icon-button>
+    </paper-toast>
+
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    Polymer({
+      is: 'company-signup',
+      properties: {
+      },
+
+      validateSignUp: function() {
+        var name = this.$.name.value;
+        var nif = this.$.nif.value;
+        var activity = this.$.activity.value;
+        var province = this.$.province.value;
+        var locality = this.$.locality.value;
+        var address = this.$.address.value;
+        var zipCode = this.$.zipCode.value;
+        var contactPerson = this.$.contactPerson.value;
+        var contactPosition = this.$.contactPosition.value;
+        var contactEmail = this.$.contactEmail.value;
+        var contactPhone = '+' + this.$.contactPhone.countryCode + ' ' + this.$.contactPhone.value
+        var contactFax = '+' + this.$.contactFax.countryCode + ' ' + this.$.contactFax.value
+        var password1 = this.$.password1.value;
+        var password2 = this.$.password2.value;
+
+        if(name == "" || nif == "" || activity == "" || province == "" || locality == "" || address == "" || zipCode == "" || contactPerson == "" ||
+          contactPosition == "" || contactEmail == "" || this.$.contactPhone.value == "" || this.$.contactFax.value == "" || password1 == "" ||
+          password2 == "")
+          this.$.fillAllFields.openToast();
+        else if(this.$.name.invalid || this.$.nif.invalid || this.$.activity.invalid || this.$.province.invalid || this.$.locality.invalid ||
+          this.$.address.invalid || this.$.zipCode.invalid || this.$.contactPerson.invalid || this.$.contactPosition.invalid || this.$.contactEmail.invalid
+          || this.$.contactPhone.invalid || this.$.contactFax.invalid || this.$.password1.invalid || this.$.password2.invalid)
+          this.$.correctInvalids.openToast();
+        else
+          this.createUser();
+      },
+
+      createUser: function(user) {
+        var userObject = {
+          registryType: 'empresa',
+          name: this.$.name.value,
+          password: this.$.password1.value,
+          nif: this.$.nif.value,
+          activity: this.$.activity.value,
+          province: this.$.province.value,
+          locality: this.$.locality.value,
+          address: this.$.address.value,
+          zipCode: this.$.zipCode.value,
+          contactPerson: this.$.contactPerson.value,
+          contactPosition: this.$.contactPosition.value,
+          contactEmail: this.$.contactEmail.value,
+          contactPhone: '+' + this.$.contactPhone.countryCode + ' ' + this.$.contactPhone.value,
+          contactFax: '+' + this.$.contactFax.countryCode + ' ' + this.$.contactFax.value
+        };
+
+        // var userJSON = JSON.stringify(userObject);
+        $.ajax({
+          type: "POST",
+          url: "/saveUser",
+          data: userObject,
+          error: function(xhr, ajaxOptions, thrownError){
+            document.querySelector('#errorInServer').openToast();
+          },
+          success: function(msg) {
+            if(msg == 'Usuario ya registrado')
+              document.querySelector('#userRegisteredPreviously').openToast();
+            else
+              document.querySelector('#userRegisteredCorrectly').open();
+          }
+        });
+      },
+
+      closePaperToastUserCreated: function(){
+        this.$.userRegisteredCorrectly.toggle()
+      }
+
+    });
+  })();
+  </script>
+</dom-module>

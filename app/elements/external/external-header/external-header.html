@@ -1,0 +1,162 @@
+<dom-module id="external-header">
+  <template>
+    <style is="custom-style" include="iron-flex iron-flex-reverse iron-flex-alignment iron-positioning"></style>
+    <style>
+      paper-tabs{
+        --paper-tabs-selection-bar-color: #49ABA0;
+      }
+      /* MAIN */
+      .main-toolbar{
+        width: 100%;
+      }
+      /* Title */
+      .app-title{
+        width: 23%;
+      }
+      .app-title .logo{
+        height: 100%;
+        width: 100%;
+      }
+      .app-title .app-name {
+        font-size: 20px;
+        text-transform: uppercase;
+        text-shadow: 1px 2px 1px rgba(0, 0, 0, 1);
+        width: 100%;
+      }
+
+      /* Tabs */
+      .main-menu{
+        width: 50%;
+        height: 100%;
+        margin-left: 2%;
+      }
+      .main-menu paper-tab{
+        width: 33.3%;
+        padding-right: 2%;
+        padding-left: 2%;
+      }
+      .main-menu paper-tab[aria-selected="true"] a{
+        opacity: 1;
+      }
+      .main-menu paper-tab[link] a {
+        font-family: 'ubuntu-regular';
+        @apply(--layout-horizontal);
+        @apply(--layout-center-center);
+        color: #fff;
+        text-decoration: none;
+        outline: 0;
+        font-size: 18px;
+        white-space: pre-line;
+        text-align: center;
+      }
+
+      /* Login and sign in buttons */
+      .login-signin-buttons{
+        width: 27%;
+      }
+      .login-signin-buttons sign-in{
+        margin-right: 2%;
+      }
+
+      /* BREAKPOINTS */
+      /* Computers */
+      @media all and (min-width: 960px) and (max-width: 1024px){
+        .app-title{
+          width: 50%;
+        }
+        .app-title .app-name {
+          font-size: 18px;
+        }
+
+        paper-tab[link] a {
+          font-size: 16px;
+        }
+
+        .login-signin-buttons{
+          width: 40%;
+        }
+      }
+      /* Tablets */
+      @media all and (min-width: 769px) and (max-width: 960px){
+        .app-title .app-name {
+          font-size: 17px;
+        }
+
+        paper-tab[link] a {
+          font-size: 15px;
+        }
+
+        .login-signin-buttons{
+          width: 40%;
+        }
+      }
+
+       /* Moviles */
+      @media all and (min-width: 0) and (max-width: 768px){
+        .app-title .app-name {
+          font-size: 16px;
+          font-weight: 400;
+        }
+
+        paper-tab[link] a {
+          font-size: 14px;
+        }
+
+        .login-signin-buttons{
+          width: 40%;
+        }
+      }
+    </style>
+
+    <iron-media-query query="(min-width: 1024px)" query-matches="{{isAtLeast1024px}}"></iron-media-query>
+    <iron-media-query query="(min-width: 768px)" query-matches="{{isAtLeast768px}}"></iron-media-query>
+
+    <div id="mainToolbar" class="main-toolbar horizontal justified layout">
+      <!-- Application name -->
+      <div id="appTitle" class="app-title layout horizontal center">
+        <a href="../../.." tab="-1">
+          <paper-icon-button id="logo" class="logo" src="../../../images/logo/mydite-logo-72x72.PNG"></paper-icon-button>
+        </a>
+        <div class="app-name">My Digital Testament</div>
+      </div>
+
+      <template is="dom-if" if="{{isAtLeast1024px}}">
+        <paper-tabs id="mainMenuTabs" class="main-menu flex" attr-for-selected="data-route" selected="{{url}}">
+          <paper-tab link data-route="empresas"><a href="../../../empresas" class="link">EMPRESAS</a></paper-tab>
+          <paper-tab link data-route="familiaresAmigos"><a href="../../../familiaresAmigos" class="link">FAMILIARES Y AMIGOS</a></paper-tab>
+          <paper-tab link data-route="planesPrecios"><a href="../../../planesPrecios" class="link">PLANES Y PRECIOS</a></paper-tab>
+        </paper-tabs>
+      </template>
+
+      <template is="dom-if" if="{{isAtLeast768px}}">
+        <div id="loginSignInButtons" class="login-signin-buttons layout horizontal center end-justified">
+          <sign-in-button></sign-in-button>
+          <sign-up></sign-up>
+        </div>
+      </template>
+
+      <template is="dom-if" if="{{!isAtLeast1024px}}">
+        <div class="horizontal center layout">
+          <paper-icon-button id="menuIconButton" class="menu-icon" icon="menu" on-click="toggleDrawerPanel"></paper-icon-button>
+        </div>
+      </template>
+    </div>
+
+  </template>
+  <script>
+  (function() {
+    'use strict';
+
+    Polymer({
+      is: 'external-header',
+      properties: {
+        url: String
+      },
+
+      toggleDrawerPanel: function(){
+        document.querySelector('#paperDrawerPanel').togglePanel();
+      }
+    });
+  })();
+  </script>
+</dom-module>

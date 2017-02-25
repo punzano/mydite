@@ -1,0 +1,137 @@
+<link rel="import" href="../../../bower_components/neon-animation/animations/fade-in-animation.html">
+<link rel="import" href="../../../bower_components/neon-animation/animations/fade-out-animation.html">
+<link rel="import" href="../../../bower_components/neon-animation/animations/cascaded-animation.html">
+
+<dom-module id="sign-in-button">
+  <template>
+    <style is="custom-style" include="iron-flex iron-flex-reverse iron-flex-alignment iron-positioning"></style>
+    <style>
+      paper-input{
+        --paper-input-container-color: black;
+        --paper-input-container-input-color: black;
+        --paper-input-container-invalid-color: red;
+        --paper-input-container-focus-color: #448AFF;
+      }
+      paper-button{
+        margin: 0 0 0 0;
+        color: #000;
+        background: var(--light-primary-color);
+        font-size: 16px;
+      }
+      paper-input{
+        padding: 0 15% 5% 10%;
+      }
+
+      .fa{
+        font-size: 20px;
+      }
+
+      .sign-in-dropdown{
+        width: 273px;
+        height: 290px;
+      }
+
+      .dropdown-content{
+        background: var(--dark-primary-to-light-primary-up-to-down);
+        padding: 0 0 5% 5%;
+        color: #000;
+        border: 2px solid var(--light-primary-color);
+        border-radius: 3px;
+        @apply(--shadow-elevation-3dp);
+      }
+      .dropdown-content p{
+        margin: 0 0;
+        padding-right: 5%;
+        text-align: center;
+        color: white;
+      }
+
+      .cancel{
+        color: #fff;
+      }
+
+      .send-data{
+        width: 50%;
+        padding-right: 5%;
+        background-color: #3F51B5;
+        color: #fff;
+      }
+
+      /* BREAKPOINTS */
+      /* Computers */
+      @media all and (min-width: 960px) and (max-width: 1024px){
+      }
+      /* Tablets */
+      @media all and (min-width: 769px) and (max-width: 960px){
+      }
+      /* Moviles */
+      @media all and (min-width: 0) and (max-width: 768px){
+      }
+    </style>
+
+    <iron-media-query query="(max-width: 768px)" query-matches="{{isAtMost768px}}" on-query-matches-changed="hideSignInDropdown"></iron-media-query>
+
+    <paper-button raised class="layout horizontal center" on-click="showSignInDropdown">ACCEDER&nbsp;<i class="fa fa-sign-in" aria-hidden="true"></i></paper-button>
+    <iron-dropdown id="signInDropdown" class="sign-in-dropdown" horizontal-align="right" vertical-align="top" open-animation-config="[[openAnimationConfig]]"
+    close-animation-config="[[closeAnimationConfig]]">
+      <form is="iron-form" id="form" class="dropdown-content" method="post" auto-complete="off">
+        <div class="horizontal-reverse layout"><paper-icon-button class="cancel" icon="cancel" on-click="hideSignInDropdown"></paper-icon-button></div>
+        <p><b>ACCESO A MYDITE</b></p>
+        <paper-input id="emailSignIn" label="&nbsp;Usuario" type="email" auto-validate><iron-icon icon="mail" prefix></iron-icon></paper-input>
+        <paper-input id="passwordSignIn" label="&nbsp;Contraseña" type="password"><iron-icon icon="lock" prefix></iron-icon></paper-input>
+        <div class="horizontal center-center layout">
+          <paper-button raised class="send-data layout horizontal center-center" on-click="signIn">ACCEDER&nbsp;<i class="fa fa-sign-in" aria-hidden="true"></i></paper-button>
+        </div>
+      </form>
+    </iron-dropdown>
+
+  </template>
+  <script>
+  (function() {
+    'use strict';
+
+    Polymer({
+      is: 'sign-in-button',
+      properties: {
+        openAnimationConfig: {
+          type: Array,
+          value: function() {
+            return [{
+              name: 'fade-in-animation',
+              timing: {
+                duration: 500
+              }
+            }];
+          }
+        },
+        closeAnimationConfig: {
+          type: Array,
+          value: function() {
+            return [{
+              name: 'fade-out-animation',
+              timing: {
+                duration: 500
+              }
+            }];
+          }
+        }
+      },
+
+      showSignInDropdown: function(){
+        this.$.signInDropdown.open();
+      },
+      hideSignInDropdown: function(){
+        this.$.signInDropdown.close();
+      },
+
+      signIn: function() {
+        console.log('Login requested');
+        var userParameters = new Object();
+        userParameters.email = this.$.emailSignIn.value;
+        userParameters.password = this.$.passwordSignIn.value;
+        document.querySelector('#firebaseLogin').login(userParameters);
+      }
+    });
+  })();
+  </script>
+</dom-module>

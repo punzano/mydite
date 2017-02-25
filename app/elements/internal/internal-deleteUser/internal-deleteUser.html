@@ -1,0 +1,129 @@
+<link rel="import" href="../../../bower_components/neon-animation/animations/scale-up-animation.html">
+<link rel="import" href="../../../bower_components/neon-animation/animations/fade-out-animation.html">
+<dom-module id="internal-deleteUser">
+  <template>
+    <style is="custom-style" include="iron-flex iron-flex-reverse iron-flex-alignment iron-positioning"></style>
+    <style>
+      paper-input{
+        --paper-input-container-color: #212121;
+        --paper-input-container-input-color: black;
+        --paper-input-container-invalid-color: red;
+        --paper-input-container-focus-color: #3F51B5;
+        --paper-input-container-underline:{ background: #fff; }
+        --paper-input-container-label:{
+          font-size: 16px;
+          font-family: ubuntu-regular;
+        }
+      }
+
+      .delete-user-dialog{
+        width: 40%;
+        height: 60%;
+        opacity: 0.9;
+        border: 3px solid;
+        border-radius: 15px;
+      }
+      .delete-user-dialog h2{
+        margin: 10px 0;
+        font-family: ubuntu-medium-italic;
+        height: auto;
+      }
+      .delete-user-dialog p{ margin: 0; }
+      .delete-user-dialog .delete-user-form{ margin-top: 0; }
+
+      .fa.fa-trash{
+        font-size: 20px;
+      }
+    </style>
+
+    <paper-dialog id="deleteUserDialog" class="delete-user-dialog" modal entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+      <h2 class="horizontal center-center layout">Eliminación de cuenta</h2>
+      <p>Rellene los siguientes campos para seguir adelante con la eliminación de su cuenta. Una vez eliminada su cuenta un email será enviado a todos sus
+        asociados (si han sido introducidos) para informarles de que usted se ha dado de baja en el sistema.
+      </p>
+      <div id="deleteUserForm" class="delete-user-form vertical layout">
+        <paper-input id="email"
+          label="&nbsp;Correo"
+          type="email"
+          auto-validate
+          error-message="El formato no coincide con el de un correo eléctronico">
+          <iron-icon icon="mail" prefix></iron-icon>
+        </paper-input>
+        <paper-input id="password1"
+          label="&nbsp;Contraseña"
+          type="password"
+          value="{{passInput}}">
+          <iron-icon icon="lock" prefix></iron-icon>
+        </paper-input>
+        <paper-input id="password2"
+          label="&nbsp;Repetir contraseña"
+          type="password"
+          pattern="{{passInput}}"
+          auto-validate
+          error-message="Las contraseñas no coinciden">
+          <iron-icon icon="lock" prefix></iron-icon>
+        </paper-input>
+      </div>
+      <div class="horizontal justified layout">
+        <paper-button class="horizontal center-center layout" dialog-dismiss on-click="closeDeleteUserDialog">
+          <span><b>CANCELAR</b></span>
+          <iron-icon icon="close"></iron-icon>
+        </paper-button>
+        <paper-button class="horizontal center-center layout" dialog-confirm on-click="confirmDeleteUser">
+          <span><b>ELIMINAR CUENTA</b></span>
+          <i class="fa fa-trash" aria-hidden="true"></i>
+        </paper-button>
+      </div>
+    </paper-dialog>
+
+    <paper-toast-error id="errorInServer"
+      text="Ha habido un problema en servidor al eliminar sus datos. Por favor, vuelva a intentarlo. Si el error persiste póngase en contacto con nosotros
+      a través del email v.punzano@gmail.com">
+    </paper-toast-error>
+    <paper-toast id="userDeleted" class="fit-bottom horizontal center justified layout" duration="10">
+      <span id="label">Sus datos han sido eliminados de nuestro sistema.</span>
+      <!-- <paper-icon-button class="toast-close-button" icon="cancel" on-click="closePaperToastUserCreated"></paper-icon-button> -->
+    </paper-toast>
+    <paper-toast-error id="userDoesNotExist" text="Los datos introducidos no existen en el sistema."></paper-toast-error>
+
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    Polymer({
+      is: 'internal-deleteUser',
+      properties: {
+      },
+
+      closeDeleteUserDialog: function(){
+        this.$.deleteUserDialog.close();
+      },
+
+      confirmDeleteUser: function(){
+        var clientData = {
+          email: this.$.email.value,
+          password: this.$.password1.value,
+          firebaseID: document.querySelector('#firebaseLogin').user.uid
+        };
+        $.ajax({
+          type: "DELETE",
+          url: "/removeUser",
+          data: clientData,
+          error: function(xhr, ajaxOptions, thrownError){
+            document.querySelector('#errorInServer').openToast();
+          },
+          success: function(msg) {
+            if(msg == 'Los datos introducidos son erróneos'){
+              document.querySelector('#userDoesNotExist').openToast();
+            }
+            else{
+              document.querySelector('#userDeleted').open();
+              document.querySelector('#firebaseLogin').logout();
+            }
+          }
+        });
+      }
+    });
+  })();
+  </script>
+</dom-module>

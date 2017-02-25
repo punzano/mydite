@@ -1,0 +1,302 @@
+<dom-module id="internal-networks">
+  <template>
+    <style is="custom-style" include="iron-flex iron-flex-alignment iron-positioning"></style>
+    <style>
+      :host{
+        width: 100%;
+        height: 100%;
+        margin: 0 3%;
+        font-size: 18px
+      }
+      paper-dialog paper-input, paper-dialog paper-dropdown-menu{
+        --paper-input-container-color: #212121;
+        --paper-input-container-input-color: black;
+        --paper-input-container-invalid-color: red;
+        --paper-input-container-focus-color: #3F51B5;
+        --paper-input-container-underline:{ background: #fff; }
+        --paper-input-container-label:{
+          font-size: 16px;
+          font-family: ubuntu-regular;
+        }
+      }
+      h2{
+        font-family: ubuntu-medium-italic;
+        margin-bottom: 5%;
+      }
+      hr{
+        margin: 3% 0 1% 0;
+      }
+
+      .input-titles{
+        font-size: 20px;
+      }
+      .input-titles .empty-container{
+        width: 30px;
+        margin: 2% 3% 0 0;
+      }
+
+      .network-container paper-input, .network-container paper-dropdown-menu{
+        --paper-input-container-color: #212121;
+        --paper-input-container-input-color: black;
+        --paper-input-container-invalid-color: red;
+        --paper-input-container-focus-color: #3F51B5;
+        --paper-input-container-underline:{ background: #3F51B5; }
+        --paper-input-container-label:{
+          font-family: ubuntu-regular;
+          color: #3F51B5;
+        }
+        --paper-input-container-input:{
+          font-size: 18px;
+        }
+      }
+      .network-container .fa{
+        font-size: 35px;
+        margin: 2% 3% 0 0;
+      }
+      .network-container .network-guide-button{
+        background-color: #3F51B5;
+        color: #fff;
+        font-size: 14px;
+        margin-top: 2%;
+      }
+      .network-container .delete-network-button{ margin-top: 2%; }
+
+      .field{
+        margin-right: 5%;
+        width: 20%;
+      }
+
+      .add-network-button{
+        position: fixed;
+        right: 42;
+        margin-top: 2%;
+      }
+
+      .add-network-dialog{
+        width: 40%;
+        height: 45%;
+        opacity: 0.9;
+        border: 3px solid;
+        border-radius: 15px;
+      }
+      .add-network-dialog h2{
+        margin: 10px 0;
+        height: auto;
+      }
+      .add-network-dialog .add-network-form{ margin-top: 0; }
+      .add-network-dialog paper-icon-button[icon="close"]{
+        width: 35px;
+        height: 35px;
+        top: -17px;
+        right: -17px;
+        margin-top: 0;
+        position: absolute;
+        color: #fff;
+        background-color: #212121;
+        border-radius: 50%;
+      }
+      .add-network-dialog .confirm-container{ margin-top: 10px; }
+      .add-network-dialog .confirm-container paper-icon-button{
+        width: 50px;
+        height: 50px;
+      }
+
+      .save-networks-button{
+        position: fixed;
+        bottom: 15;
+        right: 15;
+        color: #fff;
+        background-color: #3F51B5;
+        border-radius: 50%;
+        box-shadow: var(--custom-shadow);
+      }
+
+      .user-networks-updated .label{
+        color: green;
+      }
+    </style>
+
+    <h2>REDES SOCIALES</h2>
+    <div class="input-titles horizontal center layout">
+      <div class="empty-container"></div>
+      <span class="field">Nombre:</span>
+      <span class="field">URL:</span>
+      <span class="field">Deseo:</span>
+    </div>
+    <template is="dom-repeat" items="[[data]]">
+      <div class="vertical layout">
+        <div class="network-container horizontal center layout">
+          <i class$="fa fa-{{getIconName(item.name)}}" aria-hidden="true"></i>
+          <paper-input id="name"
+            class="field"
+            readonly
+            type="text"
+            value={{item.name}}
+            auto-validate
+            pattern="[a-zA-Z\sáéíóú]{1,40}"
+            error-message="Debe contener al menos dos letras">
+          </paper-input>
+          <paper-input id="url"
+            class="field"
+            type="text"
+            value="{{item.url}}"
+            auto-validate
+            pattern="[a-zA-Z\sáéíóú\0-9]{1,40}"
+            error-message="Debe contener al menos dos letras">
+          </paper-input>
+          <paper-dropdown-menu id="wishDropdown" class="wish-dropdown field">
+            <paper-listbox class="dropdown-content" selected="{{item.wish}}" attr-for-selected="value">
+              <paper-item value="Cierre de cuenta">Cierre de cuenta</paper-item>
+              <paper-item value="Convertir en cuenta conmemorativa">Convertir en cuenta conmemorativa</paper-item>
+            </paper-listbox>
+          </paper-dropdown-menu>
+          <paper-button class="network-guide-button" raised on-click="openNetworkGuide">Ver guía de cierre</paper-button>
+          <paper-icon-button class="delete-network-button" icon="delete" on-click="removeNetwork"></paper-icon-button>
+        </div>
+        <hr>
+      </div>
+    </template>
+
+    <paper-icon-button id="addNetworkButton" class="add-network-button" icon="add-circle" on-click="openAddNetworkForm"></paper-icon-button>
+
+    <paper-icon-button id="saveNetworksButton" class="save-networks-button" icon="save" on-click="saveNetworks"></paper-icon-button>
+
+    <paper-dialog id="addNetworkDialog" class="add-network-dialog" modal entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+      <h2 class="horizontal center-center layout">Añadir nueva red social</h2>
+      <div id="addNetworkForm" class="add-network-form vertical layout">
+        <paper-dropdown-menu id="formNetworkDropdown" label="Red Social">
+          <paper-listbox class="dropdown-content">
+            <paper-item>Facebook</paper-item>
+            <paper-item>Twitter</paper-item>
+            <paper-item>Instagram</paper-item>
+            <paper-item>Google</paper-item>
+          </paper-listbox>
+        </paper-dropdown-menu>
+        <paper-input id="formUrl"
+          label="URL de usuario"
+          type="text">
+        </paper-input>
+        <paper-dropdown-menu id="formWishDropdown" label="Deseo">
+          <paper-listbox class="dropdown-content">
+            <paper-item>Cierre de cuenta</paper-item>
+            <paper-item>Convertir en cuenta conmemorativa</paper-item>
+          </paper-listbox>
+        </paper-dropdown-menu>
+      </div>
+      <paper-icon-button icon="close" dialog-dismiss on-click="resetNetworkAdditionForm"></paper-icon-button>
+      <div class="confirm-container horizontal center-center layout">
+        <paper-icon-button icon="check-circle" class="horizontal center-center layout" dialog-confirm on-click="createNewNetwork"></paper-icon-button>
+      </div>
+    </paper-dialog>
+
+    <paper-toast-error id="errorInServer"
+      text="Ha habido un problema en servidor al registrar sus datos. Por favor, vuelva a intentarlo. Si el error persiste póngase en contacto con nosotros
+      a través del email v.punzano@gmail.com">
+    </paper-toast-error>
+    <paper-toast id="userNetworksUpdated" class="fit-bottom horizontal center-center justified layout" duration="2000">
+      <span id="label">Sus cuentas digitales han sido actualizados con éxito.</span>
+    </paper-toast>
+    <paper-toast-error id="fillAllFields" text="Deben rellenarse todos los campos del formulario"></paper-toast-error>
+
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    Polymer({
+      is: 'internal-networks',
+      properties: {
+      },
+
+      getIconName: function(itemName){
+        var lowerItemName = itemName.toLowerCase().replace(' ', '-');
+        if(lowerItemName == 'facebook' || lowerItemName == 'twitter' || lowerItemName == 'github' ||
+           lowerItemName == 'youtube' || lowerItemName == 'linkedin' || lowerItemName == 'google-plus')
+          return lowerItemName + '-square';
+        else if(lowerItemName == 'instagram' || lowerItemName == 'flickr')
+          return lowerItemName;
+      },
+
+      openAddNetworkForm: function(){
+        this.$.addNetworkDialog.open();
+      },
+
+      resetNetworkAdditionForm: function(){
+        document.querySelector('#formNetworkDropdown paper-listbox').select(null);
+        this.$.formUrl.value = "";
+        $('#addNetworkForm #formUrl #labelAndInputContainer').css('position', 'relative');
+        document.querySelector('#formWishDropdown paper-listbox').select(null);
+      },
+
+      removeNetwork: function(e){
+        $(e.target).parent().parent().parent().remove();
+      },
+
+      createNewNetwork: function(){
+        if(this.$.formNetworkDropdown.value == "" || this.$.formUrl.value == "" || this.$.formWishDropdown.value == "")
+          this.$.fillAllFields.openToast();
+        else{
+          $('#addNetworkButton').before(
+            '<div class="network-container horizontal center layout internal-networks">' +
+              '<i class="fa fa-' + this.getIconName(this.$.formNetworkDropdown.value) + ' internal-networks" aria-hidden="true"></i>' +
+              '<paper-input id="name"' +
+                'class="field internal-networks"' +
+                'readonly="true"' +
+                'type="text"' +
+                'value="' + this.$.formNetworkDropdown.value + '"' +
+                'auto-validate' +
+                'pattern="[a-zA-Z\\sáéíóú]{1,40}"' +
+                'error-message="Debe contener al menos dos letras">' +
+              '</paper-input>' +
+              '<paper-input id="url"' +
+                'class="field internal-networks"' +
+                'type="text"' +
+                'value="' + this.$.formUrl.value + '"' +
+                'auto-validate' +
+                'pattern="[a-zA-Z\\sáéíóú\\0-9]{1,40}"' +
+                'error-message="Debe contener al menos dos letras">' +
+              '</paper-input>' +
+              '<paper-dropdown-menu id="wishDropdown" class="wish-dropdown field internal-networks">' +
+                '<paper-listbox class="dropdown-content" selected="' + this.$.formWishDropdown.value + '" attr-for-selected="value">' +
+                  '<paper-item value="Cierre de cuenta">Cierre de cuenta</paper-item>' +
+                  '<paper-item value="Convertir en cuenta conmemorativa">Convertir en cuenta conmemorativa</paper-item>' +
+                '</paper-listbox>' +
+              '</paper-dropdown-menu>' +
+              '<paper-button class="network-guide-button internal-networks" raised on-click="openNetworkGuide">Ver guía de cierre</paper-button>' +
+              '<paper-icon-button class="delete-network-button internal-networks" icon="delete" on-click="removeNetwork"></paper-icon-button>' +
+            '</div>' +
+            '<hr>'
+          );
+          this.resetNetworkAdditionForm();
+        }
+      },
+
+      saveNetworks: function(){
+        var networks = $('.network-container');
+        var clientConf = {
+          clientUID: document.querySelector('#firebaseLogin').user.auth.uid,
+          socialNetworks: []
+        };
+        $.each(networks, function(i, network){
+          clientConf.socialNetworks.push({
+            name: network.children[1].value,
+            url: network.children[2].value,
+            wish: network.children[3].value
+          });
+        });
+        $.ajax({
+          type: "PUT",
+          url: "/saveUserNetworks",
+          data: clientConf,
+          error: function(xhr, ajaxOptions, thrownError){
+            document.querySelector('#internal-networks #errorInServer').openToast();
+          },
+          success: function(msg) {
+            document.querySelector('#internal-networks #userNetworksUpdated').open();
+          }
+        });
+      }
+
+    });
+  })();
+  </script>
+</dom-module>

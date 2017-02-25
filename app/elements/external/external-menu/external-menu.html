@@ -1,0 +1,93 @@
+<dom-module id="external-menu">
+  <template>
+    <style is="custom-style" include="iron-flex iron-flex-alignment iron-positioning"></style>
+    <style>
+      paper-menu {
+        padding: 5px 0;
+        --paper-menu-selected-item: {
+          color: var(--primary-color);
+          background-color: rgba(197, 202, 233, 0.6);
+        }
+
+      }
+
+      paper-menu iron-icon {
+        opacity: 0.9;
+      }
+
+      paper-menu a {
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+        text-decoration: none;
+        color: var(--menu-link-color);
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 24px;
+        min-height: 48px;
+        padding: 0 16px;
+        cursor: pointer;
+      }
+    </style>
+    <iron-media-query query="(max-width: 768px)" query-matches="{{isAtMost768px}}"></iron-media-query>
+    <!-- Drawer Content -->
+    <paper-menu id="lateral-menu" attr-for-selected="data-route" selected="{{url}}" on-click="closeDrawerPanel">
+      <a class="horizontal justified layout" data-route="home" href="../../" >
+        <span>HOME</span>
+        <iron-icon icon="chevron-right"></iron-icon>
+      </a>
+
+      <a class="horizontal justified layout" data-route="empresas" href="{{baseUrl}}empresas" on-click="closeDrawerPanel">
+        <span>EMPRESAS</span>
+        <iron-icon icon="chevron-right"></iron-icon>
+      </a>
+
+      <a class="horizontal justified layout" data-route="familiaresAmigos" href="{{baseUrl}}familiaresAmigos" on-click="closeDrawerPanel">
+        <span>FAMILIARES Y AMIGOS</span>
+        <iron-icon icon="chevron-right"></iron-icon>
+      </a>
+
+      <a class="horizontal justified layout" data-route="planesPrecios" href="{{baseUrl}}planesPrecios" on-click="closeDrawerPanel">
+        <span>PLANES Y PRECIOS</span>
+        <iron-icon icon="chevron-right"></iron-icon>
+      </a>
+
+      <template is="dom-if" if="{{isAtMost768px}}">
+        <a class="horizontal justified layout" data-route="acceso" href="{{baseUrl}}acceso" on-click="closeDrawerPanel">
+          <span>ACCEDER</span>
+          <iron-icon icon="chevron-right"></iron-icon>
+        </a>
+
+        <a class="horizontal justified layout" data-route="registro" href="{{baseUrl}}registro" on-click="closeDrawerPanelAndRemoveIronMeta">
+          <span>REGISTRO</span>
+          <iron-icon icon="chevron-right"></iron-icon>
+        </a>
+      </template>
+
+    </paper-menu>
+
+  </template>
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'external-menu',
+        properties: {
+          url: String
+        },
+
+        closeDrawerPanel: function(){
+          document.querySelector('#paperDrawerPanel').togglePanel();
+        },
+
+        closeDrawerPanelAndRemoveIronMeta: function(){
+          document.querySelector('#paperDrawerPanel').togglePanel();
+          if($('#signUpType'))
+            $('#signUpType').remove();
+        }
+      });
+    })();
+  </script>
+</dom-module>

@@ -1,0 +1,288 @@
+<dom-module id="internal-associates">
+  <template>
+    <style is="custom-style" include="iron-flex iron-flex-alignment iron-positioning"></style>
+    <style>
+      :host{
+        width: 100%;
+        height: 100%;
+        margin: 0 3%;
+        font-size: 18px;
+      }
+      h2{
+        font-family: ubuntu-medium-italic;
+        margin-bottom: 5%;
+      }
+      hr{
+        margin: 3% 0 1% 0;
+      }
+      paper-dialog paper-input{
+        --paper-input-container-color: #212121;
+        --paper-input-container-input-color: black;
+        --paper-input-container-invalid-color: red;
+        --paper-input-container-focus-color: #3F51B5;
+        --paper-input-container-underline:{ background: #fff; }
+        --paper-input-container-label:{
+          font-size: 16px;
+          font-family: ubuntu-regular;
+        }
+      }
+
+      .input-titles{ font-size: 20px; }
+
+      .associates-container paper-input{
+        --paper-input-container-color: #212121;
+        --paper-input-container-input-color: black;
+        --paper-input-container-invalid-color: red;
+        --paper-input-container-focus-color: #3F51B5;
+        --paper-input-container-underline:{ background: #3F51B5; }
+        --paper-input-container-label:{
+          font-family: ubuntu-regular;
+          color: #3F51B5;
+        }
+        --paper-input-container-input:{
+          font-size: 18px;
+        }
+      }
+      .associates-container .delete-associate-button{ margin-top: 2%; }
+
+      .field{
+        width: 40%;
+        margin-right: 5%;
+      }
+
+      .add-associate-button{
+        position: fixed;
+        right: 103;
+        margin-top: 2%;
+      }
+
+      .save-associates-button{
+        position: fixed;
+        bottom: 15;
+        right: 15;
+        color: #fff;
+        background-color: #3F51B5;
+        border-radius: 50%;
+        box-shadow: var(--custom-shadow);
+      }
+
+      .add-associate-dialog{
+        width: 40%;
+        height: 45%;
+        opacity: 0.9;
+        border: 3px solid;
+        border-radius: 15px;
+      }
+      .add-associate-dialog h2{
+        margin: 10px 0;
+        height: auto;
+      }
+      .add-associate-dialog .add-associate-form{ margin-top: 0; }
+      .add-associate-dialog paper-icon-button[icon="close"]{
+        width: 35px;
+        height: 35px;
+        top: -17px;
+        right: -17px;
+        margin-top: 0;
+        position: absolute;
+        color: #fff;
+        background-color: #212121;
+        border-radius: 50%;
+      }
+      .add-associate-dialog .confirm-container{ margin-top: 10px; }
+      .add-associate-dialog .confirm-container paper-icon-button{
+        width: 50px;
+        height: 50px;
+      }
+
+      .user-associates-updated .label{
+        color: green;
+      }
+    </style>
+
+    <h2>ASOCIADOS</h2>
+    <div class="input-titles horizontal center layout">
+      <span class="field">Nombre y apellidos:</span>
+      <span class="field">Correo electrónico:</span>
+    </div>
+    <template is="dom-repeat" items="[[data]]">
+      <div class="vertical layout">
+        <div class="associates-container horizontal center layout">
+          <paper-input id="name"
+            class="field"
+            type="text"
+            value={{concatNameAndSurname(item)}}
+            auto-validate
+            pattern="[a-zA-Z\sáéíóú]{3,80}"
+            error-message="Debe contener al menos dos letras">
+          </paper-input>
+          <paper-input id="email"
+            class="field"
+            type="email"
+            value="{{item.email}}"
+            auto-validate
+            error-message="El formato no coincide con el de un correo eléctronico">
+          </paper-input>
+          <paper-icon-button class="delete-associate-button" icon="delete" on-click="removeAssociate"></paper-icon-button>
+        </div>
+        <hr>
+      </div>
+    </template>
+
+    <template is="dom-if" if="{{maxAssociates()}}">
+      <paper-icon-button id="addAssociateButton" class="add-associate-button" icon="add-circle" on-click="openAddAssociateForm"></paper-icon-button>
+    </template>
+
+    <paper-icon-button id="saveAssociatesButton" class="save-associates-button" icon="save" on-click="saveAssociates"></paper-icon-button>
+
+    <paper-dialog id="addAssociateDialog" class="add-associate-dialog" modal entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+      <h2 class="horizontal center-center layout">Añadir nuevo asociado</h2>
+      <div id="addAssociateForm" class="add-associate-form vertical layout">
+        <paper-input id="formName"
+          label="Nombre"
+          type="text"
+          auto-validate
+          pattern="[a-zA-Z\sáéíóú]{2,40}"
+          error-message="Debe contener al menos dos letras">
+        </paper-input>
+        <paper-input id="formSurname"
+          label="Apellidos"
+          type="text"
+          auto-validate
+          pattern="[a-zA-Z\sáéíóú]{2,40}[\s][a-zA-Z\sáéíóú]{2,40}"
+          error-message="Debe incluir los dos apellidos">
+        </paper-input>
+        <paper-input id="formEmail"
+          label="Correo"
+          type="email"
+          auto-validate
+          error-message="El formato no coincide con el de un correo eléctronico">
+        </paper-input>
+      </div>
+      <paper-icon-button icon="close" dialog-dismiss on-click="resetUserAdditionForm"></paper-icon-button>
+      <div class="confirm-container horizontal center-center layout">
+        <paper-icon-button icon="check-circle" class="horizontal center-center layout" dialog-confirm on-click="createNewAssociate"></paper-icon-button>
+      </div>
+    </paper-dialog>
+
+    <paper-toast-error id="errorInServer"
+      text="Ha habido un problema en servidor al registrar sus datos. Por favor, vuelva a intentarlo. Si el error persiste póngase en contacto con nosotros
+      a través del email v.punzano@gmail.com">
+    </paper-toast-error>
+    <paper-toast id="userAssociatesUpdated" class="user-associates-updated fit-bottom horizontal center-center justified layout" duration="2000">
+      <span id="label">Sus asociados han sido actualizados con éxito.</span>
+    </paper-toast>
+    <paper-toast-error id="fillAllFields" text="Deben rellenarse todos los campos del formulario"></paper-toast-error>
+    <paper-toast-error id="maximumNumberOfMembersExceeded" text="El máximo número de asociados que puede vinclularse es 4"></paper-toast-error>
+    <paper-toast-error id="clientEmailNotAssociate" text="No puede introducirse a si mismo como asociado"></paper-toast-error>
+
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    Polymer({
+      is: 'internal-associates',
+      properties: {
+        data: {
+          type: Array,
+          notify: true
+        }
+      },
+
+      displayIndex: function(index){
+        return index + 1;
+      },
+
+      concatNameAndSurname: function(item){
+        return item.name + ' ' + item.surname;
+      },
+
+      removeAssociate: function(e){
+        $(e.target).parent().parent().parent().remove();
+      },
+
+      maxAssociates: function(){
+        var associates = $('.associates-container');
+        return associates.length < 4;
+      },
+
+      openAddAssociateForm: function(){
+        if($('.associates-container').length == 4)
+          this.$.maximumNumberOfMembersExceeded.openToast();
+        else
+          this.$.addAssociateDialog.open();
+      },
+
+      createNewAssociate: function(){
+        if(this.$.formName.value == "" || this.$.formSurname.value == "" || this.$.formEmail.value == "")
+          this.$.fillAllFields.openToast();
+        else{
+          if(this.$.formEmail.value == document.querySelector('#firebaseLogin').user.password.email){
+            this.$.clientEmailNotAssociate.openToast();
+          }
+          else{
+            $('#addAssociateButton').before(
+              '<div class="associates-container horizontal center layout internal-associates">' +
+                '<paper-input id="name"' +
+                  'class="field internal-associates"' +
+                  'type="text"' +
+                  'value="'  + this.$.formName.value + ' ' + this.$.formSurname.value + '"' +
+                  'auto-validate' +
+                  'pattern="[a-zA-Z\\sáéíóú]{3,80}"' +
+                  'error-message="Debe contener al menos dos letras">' +
+                '</paper-input>' +
+                '<paper-input id="email"' +
+                  'class="field internal-associates"' +
+                  'type="email"' +
+                  'value="' + this.$.formEmail.value + '"' +
+                  'auto-validate' +
+                  'error-message="El formato no coincide con el de un correo eléctronico">' +
+                '</paper-input>' +
+                '<paper-icon-button class="delete-associate-button internal-associates" icon="delete"></paper-icon-button>' +
+              '</div>' +
+              '<hr>'
+            );
+          }
+          this.resetUserAdditionForm();
+        }
+      },
+
+      resetUserAdditionForm: function(){
+        this.$.formName.value = "";
+        $('#addAssociateForm #name #labelAndInputContainer').css('position', 'relative');
+        this.$.formSurname.value = "";
+        $('#addAssociateForm #surname #labelAndInputContainer').css('position', 'relative');
+        this.$.formEmail.value = "";
+        $('#addAssociateForm #email #labelAndInputContainer').css('position', 'relative');
+      },
+
+      saveAssociates: function(){
+        var associates = $('.associates-container');
+        var clientConf = {
+          clientUID: document.querySelector('#firebaseLogin').user.auth.uid,
+          associates: [],
+        };
+        $.each(associates, function(i, associate){
+          var nameSplit = associate.children[0].value.split(' ');
+          clientConf.associates.push({
+            name: nameSplit[0],
+            surname: nameSplit[1] + ' ' + nameSplit[2],
+            email: associate.children[1].value
+          });
+        });
+        $.ajax({
+          type: "PUT",
+          url: "/saveUserAssociates",
+          data: clientConf,
+          error: function(xhr, ajaxOptions, thrownError){
+            document.querySelector('#internal-associates #errorInServer').openToast();
+          },
+          success: function(msg) {
+            document.querySelector('#internal-associates #userAssociatesUpdated').open();
+          }
+        });
+      }
+    });
+  })();
+  </script>
+</dom-module>

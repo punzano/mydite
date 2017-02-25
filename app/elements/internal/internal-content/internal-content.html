@@ -1,0 +1,56 @@
+<dom-module id="internal-content">
+  <template>
+    <style is="custom-style" include="iron-flex iron-flex-alignment iron-positioning"></style>
+    <style>
+      internal-menu{
+        width: 20%;
+        height: 100%;
+      }
+      internal-associates, internal-networks, internal-letter, internal-help{
+        width: 80%;
+        height: 100%;
+      }
+    </style>
+
+    <iron-ajax
+      auto
+      method='GET'
+      url="{{getURL()}}"
+      handle-as="json"
+      last-response="{{userData}}"
+      debounce-duration="300">
+    </iron-ajax>
+
+    <div class="horizontal center layout">
+      <internal-menu></internal-menu>
+
+      <internal-associates id="internal-associates" data="{{userData.associates}}"></internal-associates>
+      <internal-networks id="internal-networks" data="{{userData.socialNetworks}}" style="display: none"></internal-networks>
+      <internal-letter id="internal-letter" data="{{userData.farewellLetter}}" style="display: none"></internal-letter>
+      <internal-help id="internal-help" style="display: none"></internal-help>
+    </div>
+
+    <paper-toast-error id="errorInServer"
+      text="Ha habido un problema en servidor al acceder a sus datos. Por favor, vuelva a intentarlo. Si el error persiste póngase en contacto con nosotros
+      a través del email v.punzano@gmail.com">
+    </paper-toast-error>
+
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    Polymer({
+      is: 'internal-content',
+      properties: {
+        userData: {
+          type: Object
+        }
+      },
+
+      getURL: function(){
+        return '/getUserData/' + document.querySelector("#firebaseLogin").user.uid;
+      }
+    });
+  })();
+  </script>
+</dom-module>

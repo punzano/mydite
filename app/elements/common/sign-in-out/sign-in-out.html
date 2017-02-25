@@ -1,0 +1,83 @@
+<dom-module id="sign-in-out">
+  <template>
+    <style>
+    </style>
+
+    <firebase-auth id="firebaseLogin"
+      user="infoUsuario"
+      status-known="{{statusKnown}}"
+      location="https://mydite.firebaseio.com"
+      provider="password"
+      params="{{parametros}}"
+      on-error="errorMessageSignIn"
+      on-login="onSignIn"
+      on-logout="onSignOut">
+    </firebase-auth>
+
+    <paper-toast-error id="incorrectData" text="El correo electrónico o la contraseña no son correctos."></paper-toast-error>
+
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    Polymer({
+      is: 'sign-in-out',
+      properties: {
+
+      },
+
+      onSignIn: function(e){
+        console.log('SignedIn');
+        $('body').children('external-template#external-template').remove();
+        app.isUserAuth = true;
+        this.isUserInitialConfigDone(e.detail.user);
+      },
+
+      onSignOut: function() {
+        console.log('SignedOut');
+        app.isUserAuth = false;
+        if($('body').children('internal-template#internal-template').length > 0) $('body').children('internal-template#internal-template').remove();
+        if($('body').children('internal-conf-template#internal-conf-template').length > 0) $('body').children('internal-conf-template#internal-conf-template').remove();
+      },
+
+      errorMessageSignIn: function(e) {
+        if(e.detail.code == 'INVALID_USER' || e.detail.code == 'INVALID_PASSWORD')
+          this.$.incorrectData.openToast();
+        else
+          console.log(e.detail.code);
+      },
+
+      isUserInitialConfigDone: function(userData){
+        $.ajax({
+          type: "GET",
+          url: "/userConfigDone",
+          data: {uid: userData.uid},
+          error: function(xhr, ajaxOptions, thrownError){
+            console.log('Error en GET. Comprobación de si la config inicial está hecha.')
+          },
+          success: function(msg) {
+            if(msg == 'Logout')
+              document.querySelector('#firebaseLogin').logout();
+            else{
+              msg == 'Hecha' ? app.configDone = true : app.configDone = false;
+
+              if(app.configDone){
+                if($('body').children('internal-conf-template#internal-conf-template').length > 0) $('body').children('internal-conf-template#internal-conf-template').remove();
+                var component = document.createElement('internal-template');
+                component.setAttribute('id', 'internal-template');
+                document.querySelector('body').appendChild(component);
+              }
+              else{
+                if($('body').children('internal-template#internal-template').length > 0) $('body').children('internal-template#internal-template').remove();
+                var component = document.createElement('internal-conf-template');
+                component.setAttribute('id', 'internal-conf-template');
+                document.querySelector('body').appendChild(component);
+              }
+            }
+          }
+        });
+      }
+    });
+  })();
+  </script>
+</dom-module>

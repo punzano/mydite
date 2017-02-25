@@ -1,0 +1,167 @@
+<dom-module id="internal-letter">
+  <template>
+    <style is="custom-style" include="iron-flex iron-flex-alignment iron-positioning"></style>
+    <style>
+      :host{
+        font-size: 18px;
+        width: 100%;
+        height: 100%;
+      }
+
+      h2{
+        font-family: ubuntu-medium-italic;
+      }
+
+      .letter-container{
+        width: 100%;
+        min-height: 100%;
+        font-size: 18px;
+        position: relative;
+        z-index: 1;
+        padding: 0 3%;
+      }
+
+      .letter-container .background{
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        z-index: -1;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: url('../../../images/bottle-letter.jpg') no-repeat;
+        background-size: cover;
+        opacity: 0.2
+      }
+      .letter-container .letter-text-container{
+        width: 100%;
+      }
+      .letter-container .letter-text-container .letter-text{
+        width: 50%;
+        min-height: 80%;
+        padding: 1%;
+        border: 2px solid;
+        border-top-left-radius: 5%;
+        border-bottom-right-radius: 5%;
+        box-shadow: var(--custom-shadow);
+      }
+      .letter-container .edit-button-container{
+        height: 100%;
+      }
+      .letter-container .edit-letter-button, .letter-container .save-letter-button{
+        position: fixed;
+        bottom: 15;
+        right: 15;
+        color: #fff;
+        background-color: #3F51B5;
+        border-radius: 50%;
+        box-shadow: var(--custom-shadow);
+      }
+
+      .wysiwyg-container{
+        background-color: #fff;
+        top: 13%;
+        left: 2.4%;
+        height: 78%;
+        width: 85%;
+      }
+
+      .letter-saved-message .label{
+        color: green;
+      }
+    </style>
+
+    <div id="letterContainer" class="letter-container vertical layout">
+
+      <h2>CARTA DE DESPEDIDA</h2>
+      <div class="background"></div>
+      <div id="letterTextContainer" class="letter-text-container horizontal center-center layout">
+        <div id="letterText" class="letter-text">{{getHTML(data)}}</div>
+      </div>
+      <paper-icon-button id="editLetterButton" class="edit-letter-button" icon="create" on-click="showEditLetter"></paper-icon-button>
+
+      <paper-material id="wysiwygContainer" class="wysiwyg-container fit vertical layout" elevation="5" style="display:none">
+        <wysiwyg-e id="wysiwyg" class="flex" value="[[data]]">
+          <wysiwyg-tool-bold class="wysiwyg-tool"></wysiwyg-tool-bold>
+          <wysiwyg-tool-italic class="wysiwyg-tool"></wysiwyg-tool-italic>
+          <wysiwyg-tool-underline class="wysiwyg-tool"></wysiwyg-tool-underline>
+          <wysiwyg-tool-strike class="wysiwyg-tool"></wysiwyg-tool-strike>
+          <wysiwyg-tool-clear class="wysiwyg-tool"></wysiwyg-tool-clear>
+          <wysiwyg-tool-link class="wysiwyg-tool"></wysiwyg-tool-link>
+          <wysiwyg-tool-image class="wysiwyg-tool"></wysiwyg-tool-image>
+          <wysiwyg-tool-ordered class="wysiwyg-tool"></wysiwyg-tool-ordered>
+          <wysiwyg-tool-unordered class="wysiwyg-tool"></wysiwyg-tool-unordered>
+          <wysiwyg-tool-indent class="wysiwyg-tool"></wysiwyg-tool-indent>
+          <wysiwyg-tool-outdent class="wysiwyg-tool"></wysiwyg-tool-outdent>
+          <wysiwyg-tool-justify class="wysiwyg-tool" right center full></wysiwyg-tool-justify>
+          <wysiwyg-tool-heading class="wysiwyg-tool" h1 h2 h3 h4 h5 h6></wysiwyg-tool-heading>
+          <wysiwyg-tool-blockquote class="wysiwyg-tool"></wysiwyg-tool-blockquote>
+          <wysiwyg-tool-undo class="wysiwyg-tool"></wysiwyg-tool-undo>
+          <wysiwyg-tool-redo class="wysiwyg-tool"></wysiwyg-tool-redo>
+        </wysiwyg-e>
+      </paper-material>
+      <paper-icon-button id="saveLetterButton" class="save-letter-button" icon="save" style="display:none" on-click="saveLetter"></paper-icon-button>
+
+    </div>
+
+    <paper-toast-error id="errorInServer"
+      text="Ha habido un problema en servidor al registrar sus datos. Por favor, vuelva a intentarlo. Si el error persiste póngase en contacto con nosotros
+      a través del email v.punzano@gmail.com">
+    </paper-toast-error>
+    <paper-toast id="letterSavedMessage" class="letter-saved-message fit-bottom horizontal center-center layout" duration="2000">
+      <span class="label">Las modificaciones en su carta de despedida han sido guardadas con éxito.</span>
+    </paper-toast>
+
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    Polymer({
+      is: 'internal-letter',
+      properties: {
+        data: {
+          type: String,
+          notify: true
+        }
+      },
+
+      getHTML: function(data){
+        var htmlCode = $.parseHTML(data);
+        $('#letterText').append($(htmlCode[0]));
+      },
+
+      showEditLetter: function(){
+        $('#letterTextContainer').hide();
+        $('#editLetterButton').hide();
+        $('#wysiwygContainer').show();
+        $('#saveLetterButton').show();
+      },
+
+      saveLetter: function(){
+        $('#letterText').children().remove();
+        this.data = '<div>' + $('#internal-letter #wysiwyg #content #editable').html() + '</div>';
+        var clientConf = {
+          clientUID: document.querySelector('#firebaseLogin').user.auth.uid,
+          farewellLetter: '<div>' + $('#internal-letter #wysiwyg #content #editable').html() + '</div>',
+        };
+        $.ajax({
+          type: "PUT",
+          url: "/saveUserLetter",
+          data: clientConf,
+          error: function(xhr, ajaxOptions, thrownError){
+            document.querySelector('#internal-letter #errorInServer').openToast();
+          },
+          success: function(msg) {
+            document.querySelector('#internal-letter #letterSavedMessage').open();
+            $('#letterTextContainer').show();
+            $('#editLetterButton').show();
+            $('#wysiwygContainer').hide();
+            $('#saveLetterButton').hide();
+          }
+        });
+      }
+    });
+  })();
+  </script>
+</dom-module>

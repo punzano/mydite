@@ -1,0 +1,104 @@
+<dom-module id="internal-menu">
+  <template>
+    <style is="custom-style" include="iron-flex iron-flex-alignment iron-positioning"></style>
+    <style>
+      :host{
+        width: 100%;
+        height: 100%;
+      }
+
+      paper-menu {
+        padding: 0;
+        border-right: 2px solid #727272;
+        --paper-menu-selected-item: {
+          color: var(--primary-color);
+          background-color: rgba(197, 202, 233, 0.6);
+          font-size: 18px;
+        }
+      }
+
+      .menu-item{
+        height: 25%;
+        font-size: 18px;
+        font-weight: 400;
+        line-height: 24px;
+        padding: 0 16px;
+        cursor: pointer;
+      }
+      .menu-item:hover{
+        background-color: #B6B6B6;
+        color: #fff;
+        font-size: 20px;
+      }
+
+      .menu-item i{ font-size: 18px; }
+    </style>
+
+    <iron-media-query query="(max-width: 768px)" query-matches="{{isAtMost768px}}"></iron-media-query>
+
+    <paper-menu id="lateralMenu" attr-for-selected="data-route" selected="associates">
+      <template is="dom-if" if="{{isAtMost768px}}">
+        <div class="menu-item horizontal center-center layout" on-click="signOut">
+          <span>SALIR</span>
+        </div>
+        <div class="menu-item horizontal center-center layout" on-click="deleteUser">
+          <span>ELIMINAR CUENTA</span>
+        </div>
+      </template>
+
+      <div class="menu-item horizontal center-center layout" data-route="associates" on-click="showAssociates">
+        <span>ASOCIADOS</span>
+      </div>
+      <div class="menu-item horizontal center-center layout" data-route="networks" on-click="showNetworks">
+        <span>REDES</span>
+      </div>
+      <div class="menu-item horizontal center-center layout" data-route="letter" on-click="showLetter">
+        <span>CARTA DE DESPEDIDA</span>
+      </div>
+      <div class="menu-item horizontal center-center layout" data-route="help" on-click="showHelp">
+        <span>AYUDA</span>
+      </div>
+    </paper-menu>
+
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    Polymer({
+      is: 'internal-menu',
+      properties: {
+        url: String
+      },
+
+      deleteUser: function(){
+        document.querySelector('#paperDrawerPanel').togglePanel();
+      },
+
+      signOut: function(){
+        document.querySelector('#paperDrawerPanel').togglePanel();
+        document.querySelector('#firebaseLogin').logout();
+      },
+
+      showAssociates: function() {
+        $('internal-' + this.$.lateralMenu.selected).hide();
+        $('internal-associates').show();
+      },
+
+      showNetworks: function(){
+        $('internal-' + this.$.lateralMenu.selected).hide();
+        $('internal-networks').show();
+      },
+
+      showLetter: function(){
+        $('internal-' + this.$.lateralMenu.selected).hide();
+        $('internal-letter').show();
+      },
+
+      showHelp: function(){
+        $('internal-' + this.$.lateralMenu.selected).hide();
+        $('internal-help').show();
+      }
+    });
+  })();
+  </script>
+</dom-module>

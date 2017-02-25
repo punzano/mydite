@@ -1,0 +1,62 @@
+<script src="../bower_components/page/page.js"></script>
+<script>
+  window.addEventListener('WebComponentsReady', function() {
+
+    // Removes end / from app.baseUrl which page.base requires for production
+    if (window.location.port === '') {  // if production
+      page.base(app.baseUrl.replace(/\/$/, ''));
+    }
+
+    page('/', function() {
+      app.route = 'home';
+    });
+
+    page(app.baseUrl, function() {
+      app.route = 'home';
+    });
+
+    page('/home', function() {
+      app.route = 'home';
+    });
+
+    page('/empresas', function() {
+      app.route = 'empresas';
+    });
+
+    page('/familiaresAmigos', function() {
+      app.route = 'familiaresAmigos';
+    });
+
+    page('/planesPrecios', function() {
+      app.route = 'planesPrecios';
+    });
+
+    page('/acceso', function() {
+      if(window.innerWidth >= parseInt(document.querySelector('#paperDrawerPanel').responsiveWidth.replace( /^\D+/g, ''))){
+        page.redirect('/');
+        app.route = 'home';
+      }
+      else
+        app.route = 'acceso';
+    });
+
+    page('/registro', function() {
+      app.route = 'registro';
+    });
+
+    // page('/user', function() {
+    //   app.route = 'user';
+    // });
+
+    // 404
+    page('*', function() {
+      alert('Error 404');
+    });
+
+    // add #! before urls
+    page({
+      hashbang: false
+    });
+
+  });
+</script>

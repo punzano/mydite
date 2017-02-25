@@ -1,0 +1,46 @@
+<dom-module id="external-content">
+  <template>
+    <style>
+      .content-container{
+        width: 100%;
+        min-height: 100%;
+      }
+    </style>
+
+    <!-- <iron-meta id="signUpType" key="signUpType" value="{{signUpType}}"></iron-meta> -->
+    <div id="contentContainer" class="content-container"></div>
+
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    Polymer({
+      is: 'external-content',
+
+      properties: {
+        url: String,
+        element: {
+          computed: 'loadContent(url)'
+        },
+        signUpType: {
+          type: String,
+          notify: true
+        }
+      },
+
+      loadContent: function(url){
+        // var signUpType;
+        // $.extend(signUpType, this.signUpType);
+        this.$.contentContainer.innerHTML = '';
+        if($('link')[$('link').length - 1].href.indexOf('elements.html') == -1)
+          $('link')[$('link').length - 1].remove();
+        this.importHref(url + '.html')
+        var component = document.createElement(url + '-mydite');
+        // if(url == 'registro' || url == "planesPrecios")
+        //   component.setAttribute('signuptype', signUpType);
+        this.$.contentContainer.appendChild(component);
+      }
+    });
+  })();
+  </script>
+</dom-module>

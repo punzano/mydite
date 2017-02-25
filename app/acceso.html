@@ -1,0 +1,82 @@
+<dom-module id="acceso-mydite">
+  <template>
+    <style is="custom-style" include="iron-flex iron-flex-alignment iron-positioning"></style>
+    <style>
+      paper-input{
+        --paper-input-container-color: black;
+        --paper-input-container-input-color: black;
+        --paper-input-container-invalid-color: red;
+        --paper-input-container-focus-color: #448AFF;
+      }
+      paper-button{
+        margin: 0 0 0 0;
+        color: #000;
+        background: var(--light-primary-color);
+        font-size: 16px;
+        @apply(--shadow-elevation-6dp);
+      }
+      paper-input{
+        padding: 0 15% 5% 10%;
+      }
+      h3{
+        margin: 0 0;
+        padding: 15px 0;
+        text-align: center;
+        color: var(--default-primary-color);
+      }
+
+      paper-material{
+        background: var(--light-primary-color);
+        margin: 2%;
+      }
+
+      .signin-content{
+        padding: 0 0 5% 5%;
+        color: #000;
+      }
+
+      .cancel{
+        color: #3F51B5;
+      }
+
+      .button-container{
+        margin-top: 10%;
+      }
+      .button-container .send-data{
+        width: 35%;
+        background-color: #3F51B5;
+        color: #fff;
+      }
+
+      /* BREAKPOINTS */
+      /* Computers */
+      @media all and (min-width: 960px) and (max-width: 1024px){}
+      /* Tablets */
+      @media all and (min-width: 769px) and (max-width: 960px){}
+      /* Moviles */
+      @media all and (min-width: 0) and (max-width: 768px){}
+    </style>
+
+    <paper-material elevation="3">
+      <h3>ACCESO A MYDITE</h3>
+      <form is="iron-form" id="form" class="signin-content" method="post" action="/log-in">
+        <paper-input label="&nbsp;Usuario" type="email" auto-validate><iron-icon icon="mail" prefix></iron-icon></paper-input>
+        <paper-input label="&nbsp;Contraseña" type="password"><iron-icon icon="lock" prefix></iron-icon></paper-input>
+        <div class="button-container horizontal center-center layout">
+          <paper-button class="send-data horizontal center-center layout">ACCEDER&nbsp;<iron-icon icon="exit-to-app"></iron-icon></paper-button>
+        </div>
+      </form>
+    </paper-material>
+
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    Polymer({
+      is: 'acceso-mydite',
+      properties: {
+      },
+    });
+  })();
+  </script>
+</dom-module>

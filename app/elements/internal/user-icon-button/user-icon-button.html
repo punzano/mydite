@@ -1,0 +1,113 @@
+<link rel="import" href="../../../bower_components/neon-animation/animations/fade-in-animation.html">
+<link rel="import" href="../../../bower_components/neon-animation/animations/fade-out-animation.html">
+<link rel="import" href="../../../bower_components/neon-animation/animations/cascaded-animation.html">
+<dom-module id="user-icon-button">
+  <template>
+    <style is="custom-style" include="iron-flex iron-flex-reverse iron-flex-alignment iron-positioning"></style>
+    <style>
+      .user-button{
+        margin: 0 0 0 0;
+        color: #fff;
+        background: transparent;
+        font-size: 20px;
+        height: 100%;
+      }
+      .user-button iron-icon{
+        width: 40px;
+        height: 40px;
+      }
+
+      .sign-in-dropdown{
+        width: 273px;
+      }
+      .sign-in-dropdown .dropdown-content{
+        background: var(--dark-primary-to-light-primary-up-to-down);
+        border: 2px solid var(--light-primary-color);
+        border-radius: 3px;
+        @apply(--shadow-elevation-3dp);
+        color: #000;
+      }
+      .sign-in-dropdown .dropdown-content .menu-item{
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 24px;
+        min-height: 48px;
+        padding: 0 16px;
+        cursor: pointer;
+      }
+      .sign-in-dropdown .dropdown-content .menu-item.first{ border-bottom: 2px solid var(--light-primary-color) }
+      .sign-in-dropdown .dropdown-content .menu-item i{ font-size: 18px; }
+    </style>
+
+    <paper-button class="user-button horizontal end-justified center layout" on-click="showSignInDropdown">
+      <span>User Name</span>
+      <iron-icon id="userButton" icon="account-circle"></iron-icon>
+    </paper-button>
+    <iron-dropdown id="signInDropdown" class="sign-in-dropdown" horizontal-align="right" vertical-align="top" open-animation-config="[[openAnimationConfig]]"
+    close-animation-config="[[closeAnimationConfig]]">
+      <div class="dropdown-content">
+        <div class="menu-item first horizontal justified center layout" on-click="signOut">
+          <span><b>SALIR</b></span>
+          <i class="fa fa-sign-out" aria-hidden="true"></i>
+          <paper-ripple center></paper-ripple>
+        </div>
+        <div class="menu-item horizontal justified center layout" on-click="deleteUser">
+          <paper-ripple center></paper-ripple>
+          <span><b>ELIMINAR CUENTA</b></span>
+          <i class="fa fa-trash" aria-hidden="true"></i>
+
+        </div>
+      </div>
+    </iron-dropdown>
+
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    Polymer({
+      is: 'user-icon-button',
+      properties: {
+        openAnimationConfig: {
+          type: Array,
+          value: function() {
+            return [{
+              name: 'fade-in-animation',
+              timing: {
+                duration: 500
+              }
+            }];
+          }
+        },
+        closeAnimationConfig: {
+          type: Array,
+          value: function() {
+            return [{
+              name: 'fade-out-animation',
+              timing: {
+                duration: 500
+              }
+            }];
+          }
+        }
+      },
+
+      showSignInDropdown: function(){
+        this.$.signInDropdown.open();
+      },
+      hideSignInDropdown: function(){
+        this.$.signInDropdown.close();
+      },
+
+      deleteUser: function(){
+        this.$.signInDropdown.close();
+        document.querySelector('#deleteUserDialog').open();
+      },
+
+      signOut: function(){
+        this.$.signInDropdown.close();
+        document.querySelector('#firebaseLogin').logout();
+      }
+    });
+  })();
+  </script>
+</dom-module>

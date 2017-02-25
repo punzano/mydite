@@ -1,0 +1,290 @@
+<dom-module id="free-signup">
+  <template>
+    <style is="custom-style" include="iron-flex iron-flex-alignment iron-positioning"></style>
+    <style>
+      paper-input, vaadin-date-picker, gold-zip-input, gold-phone-input{
+        width: 45%;
+        height: 10%;
+        --paper-input-container-color: #212121;
+        --paper-input-container-input-color: black;
+        --paper-input-container-invalid-color: red;
+        --paper-input-container-focus-color: #3F51B5;
+        --paper-input-container-underline:{ background: #fff; }
+        --paper-input-container-label:{
+          font-size: 16px;
+          font-family: ubuntu-regular;
+        }
+      }
+      vaadin-date-picker{
+        --vaadin-date-picker-overlay:{
+          background-color: #fff;
+          border-radius: 10px;
+        }
+        --vaadin-date-picker-footer:{
+          background-color: #212121;
+          border-bottom-right-radius: 10px;
+        }
+        --vaadin-date-picker-calendar-title:{ color: #212121; }
+      }
+      paper-button{
+        margin: 0 0 0 0;
+        color: #000;
+        background: var(--light-primary-color);
+        font-size: 16px;
+        @apply(--shadow-elevation-6dp);
+      }
+      h3{
+        margin: 0 0;
+        padding: 15px 0;
+        text-align: center;
+        color: var(--default-primary-color);
+      }
+
+      .signup{
+        background: var(--light-primary-color);
+        margin: 2% 10%;
+        border-radius: 1%;
+      }
+
+      .signup-content{
+        padding: 0 10% 5% 10%;
+        color: #000;
+        font-size: 16px;
+      }
+
+      .input-left{ margin-right: 10%; }
+
+      #userRegisteredCorrectly span{
+        color: green;
+      }
+
+      .interests-container{ margin-top: 5%; }
+      .interests-options-container{ margin-left: 5%; }
+      .interests-options-container paper-checkbox{
+        width: 23%;
+        margin-right: 1%;
+        margin-bottom: 2%;
+      }
+
+      .button-container{
+        margin-top: 5%;
+        width: 35%;
+      }
+      .button-container .send-data{
+        background-color: #3F51B5;
+        color: #fff;
+      }
+
+      /* BREAKPOINTS */
+      /* Computers */
+      @media all and (min-width: 960px) and (max-width: 1024px){
+        .signup-content{ font-size: 14px; }
+      }
+      /* Tablets */
+      @media all and (min-width: 900px) and (max-width: 960px){
+        .signup-content{ font-size: 13px; }
+      }
+      /* Tablets */
+      @media all and (min-width: 0px) and (max-width: 900px){
+        .interests-options-container paper-checkbox{ width: 32%; }
+        .signup-content{ font-size: 12.5px; }
+      }
+      /* Moviles */
+      @media all and (min-width: 0) and (max-width: 768px){
+        paper-input, vaadin-date-picker, gold-zip-input, gold-phone-input{
+          width: 100%;
+          --paper-input-container-label:{ font-size: 14px; }
+        }
+        paper-button{ font-size: 14px; }
+        paper-input-container{
+          margin-bottom: 2%;
+        }
+
+        .input-left{ margin-right: 0; }
+
+        .interests-options-container paper-checkbox{ width: 49%; }
+      }
+    </style>
+
+    <paper-material elevation="3" id="signUp" class="signup">
+      <h3>REGISTRO GRATUITO</h3>
+      <form is="iron-form" id="form" class="signup-content horizontal center-center wrap layout" method="post" action="/sign-up" auto-complete="off">
+        <paper-input id="name" class="input-left"
+          label="Nombre"
+          type="text"
+          auto-validate
+          pattern="[a-zA-Z\sáéíóú]{2,40}"
+          error-message="Debe contener al menos dos letras">
+        </paper-input>
+        <paper-input id="surname"
+          label="Apellidos"
+          type="text"
+          auto-validate
+          pattern="[a-zA-Z\sáéíóú]{2,40}[\s][a-zA-Z\sáéíóú]{2,40}"
+          error-message="Debe incluir los dos apellidos">
+        </paper-input>
+        <paper-input id="email" class="input-left"
+          label="Correo"
+          type="email"
+          auto-validate
+          error-message="El formato no coincide con el de un correo eléctronico">
+        </paper-input>
+        <vaadin-date-picker id="vDatePicker"
+          label="Fecha de nacimiento">
+        </vaadin-date-picker>
+        <paper-input id="password1" class="input-left"
+          label="Contraseña"
+          type="password"
+          value="{{passInput}}">
+        </paper-input>
+        <paper-input id="password2"
+          label="Repetir contraseña"
+          type="password"
+          pattern="{{passInput}}"
+          auto-validate
+          error-message="Las contraseñas no coinciden">
+        </paper-input>
+        <paper-input id="province" class="input-left"
+          label="Provincia"
+          type="text"
+          auto-validate
+          pattern="[a-zA-Z\sáéíóú]{2,40}"
+          error-message="Debe contener al menos dos letras">
+        </paper-input>
+        <paper-input id="locality"
+          label="Localidad"
+          type="text"
+          auto-validate
+          pattern="[a-zA-Z\sáéíóú]{2,40}"
+          error-message="Debe contener al menos dos letras">
+        </paper-input>
+        <gold-zip-input id="zipCode" class="input-left"
+          label="Código postal"
+          auto-validate>
+        </gold-zip-input>
+        <gold-phone-input id="phoneNumber"
+          label="Número de teléfono"
+          country-code="34"
+          phone-number-pattern="XXX-XX-XX-XX"
+          auto-validate>
+        </gold-phone-input>
+        <div id="interests" class="interests-container horizontal layout">
+          <b>Intereses (deben seleccionarse al menos 3):</b>
+          <div id="interests" class="interests-options-container horizontal wrap layout">
+            <paper-checkbox>Tecnología</paper-checkbox>
+            <paper-checkbox>Automovilismo</paper-checkbox>
+            <paper-checkbox>Nutrición</paper-checkbox>
+            <paper-checkbox>Deportes</paper-checkbox>
+            <paper-checkbox>Ropa</paper-checkbox>
+            <paper-checkbox>Cultura</paper-checkbox>
+            <paper-checkbox>Viajes</paper-checkbox>
+            <paper-checkbox>Idiomas</paper-checkbox>
+          </div>
+        </div>
+        <div class="button-container horizontal center-center layout">
+          <paper-button id="sendFormButton" class="send-data horizontal center-center layout" on-click="validateSignUp">
+            REGÍSTRAME&nbsp;<i class="fa fa-sign-in" aria-hidden="true"></i>
+          </paper-button>
+        </div>
+      </form>
+    </paper-material>
+
+    <paper-toast-error id="fillAllFields" text="Deben rellenarse todos los campos del formulario"></paper-toast-error>
+    <paper-toast-error id="correctInvalids" text="Debe corregir los campos inválidos"></paper-toast-error>
+    <paper-toast-error id="chooseInterests" text="Debe escoger al menos 3 intereses"></paper-toast-error>
+    <paper-toast-error id="userRegisteredPreviously" text="El usuario introducido ya existe en el sistema"></paper-toast-error>
+    <paper-toast-error id="errorInServer"
+      text="Ha habido un problema en servidor al registrar sus datos. Por favor, vuelva a intentarlo. Si el error persiste póngase en contacto con nosotros
+      a través del email v.punzano@gmail.com">
+    </paper-toast-error>
+    <paper-toast id="userRegisteredCorrectly" class="fit-bottom horizontal center justified layout" duration="0">
+      <span id="label">Ha sido registrado con éxito en el sistema. Para completar el proceso, acceda al correo que le será enviado y pinche en el link de validación.</span>
+      <paper-icon-button class="toast-close-button" icon="cancel" on-click="closePaperToastUserCreated"></paper-icon-button>
+    </paper-toast>
+
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    Polymer({
+      is: 'free-signup',
+      properties: {
+      },
+
+      validateSignUp: function() {
+        var name = this.$.name.value;
+        var surname = this.$.surname.value;
+        var email = this.$.email.value;
+        var birth = this.$.vDatePicker.value;
+        var password1 = this.$.password1.value;
+        var password2 = this.$.password2.value;
+        var province = this.$.province.value;
+        var locality = this.$.locality.value;
+        var zipCode = this.$.zipCode.value;
+        var phoneNumber = '+' + this.$.phoneNumber.countryCode + ' ' + this.$.phoneNumber.value;
+        var interests = document.querySelectorAll('paper-checkbox');
+        var interestsSelected = [];
+        for(var i in interests){
+          if(interests[i].checked)
+            interestsSelected.push(interests[i]);
+        }
+
+        if(name == "" || surname == "" || email == "" || birth == "" || password1 == "" || password2 == "" || province == "" || locality == "" ||
+          zipCode == "" || this.$.phoneNumber.value == "")
+          this.$.fillAllFields.openToast();
+
+        else if(this.$.name.invalid || this.$.surname.invalid || this.$.email.invalid || this.$.vDatePicker.invalid || this.$.password1.invalid ||
+          this.$.password2.invalid || this.$.province.invalid || this.$.locality.invalid || this.$.zipCode.invalid || this.$.phoneNumber.invalid)
+          this.$.correctInvalids.openToast();
+
+        else if(interestsSelected.length < 3)
+          this.$.chooseInterests.openToast();
+
+        else
+          this.createUser();
+      },
+
+      createUser: function(user) {
+        var userObject = {
+          registryType: 'gratuito',
+          name: this.$.name.value,
+          surname: this.$.surname.value,
+          email: this.$.email.value,
+          birth: this.$.vDatePicker.value,
+          password: this.$.password1.value,
+          province: this.$.province.value,
+          locality: this.$.locality.value,
+          zipCode: this.$.zipCode.value,
+          phoneNumber: '+' + this.$.phoneNumber.countryCode + ' ' + this.$.phoneNumber.value,
+          interests: []
+        };
+        var interests = document.querySelectorAll('paper-checkbox');
+        for(var i in interests){
+          if(interests[i].checked)
+            userObject.interests.push(interests[i].innerText);
+        }
+
+        // var userJSON = JSON.stringify(userObject);
+        $.ajax({
+          type: "POST",
+          url: "/registerUser",
+          data: userObject,
+          error: function(xhr, ajaxOptions, thrownError){
+            document.querySelector('#errorInServer').openToast();
+          },
+          success: function(msg) {
+            if(msg == 'Usuario ya registrado')
+              document.querySelector('#userRegisteredPreviously').openToast();
+            else
+              document.querySelector('#userRegisteredCorrectly').open();
+          }
+        });
+      },
+
+      closePaperToastUserCreated: function(){
+        this.$.userRegisteredCorrectly.toggle()
+      }
+    });
+  })();
+  </script>
+</dom-module>

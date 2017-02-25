@@ -1,0 +1,5 @@
+dist
+.tmp
+.publish/
+node_modules
+app/bower_components

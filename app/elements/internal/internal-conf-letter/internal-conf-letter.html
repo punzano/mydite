@@ -1,0 +1,54 @@
+<dom-module id="internal-conf-letter">
+  <template>
+    <style is="custom-style" include="iron-flex iron-flex-reverse iron-flex-alignment iron-positioning"></style>
+    <style>
+      h2{ font-family: ubuntu-medium-italic; }
+      .wysiwyg-container{
+        top: 13%;
+        left: 2.4%;
+        height: 78%;
+        width: 95%;
+      }
+    </style>
+
+    <h2 class="horizontal center-center layout">CARTA DE DESPEDIDA</h2>
+    <!-- <span>Entedemos que este paso no es sencillo y por lo tanto puede finalizar la configuración y escribir esta carta en otro momento si así lo desea.</span> -->
+
+    <paper-material class="wysiwyg-container fit vertical layout" elevation="5">
+      <wysiwyg-e id="wysiwyg" class="flex" value="{{letter}}">
+        <wysiwyg-tool-bold class="wysiwyg-tool"></wysiwyg-tool-bold>
+        <wysiwyg-tool-italic class="wysiwyg-tool"></wysiwyg-tool-italic>
+        <wysiwyg-tool-underline class="wysiwyg-tool"></wysiwyg-tool-underline>
+        <wysiwyg-tool-strike class="wysiwyg-tool"></wysiwyg-tool-strike>
+        <wysiwyg-tool-clear class="wysiwyg-tool"></wysiwyg-tool-clear>
+        <wysiwyg-tool-link class="wysiwyg-tool"></wysiwyg-tool-link>
+        <wysiwyg-tool-image class="wysiwyg-tool"></wysiwyg-tool-image>
+        <wysiwyg-tool-ordered class="wysiwyg-tool"></wysiwyg-tool-ordered>
+        <wysiwyg-tool-unordered class="wysiwyg-tool"></wysiwyg-tool-unordered>
+        <wysiwyg-tool-indent class="wysiwyg-tool"></wysiwyg-tool-indent>
+        <wysiwyg-tool-outdent class="wysiwyg-tool"></wysiwyg-tool-outdent>
+        <wysiwyg-tool-justify class="wysiwyg-tool" right center full></wysiwyg-tool-justify>
+        <wysiwyg-tool-heading class="wysiwyg-tool" h1 h2 h3 h4 h5 h6></wysiwyg-tool-heading>
+        <wysiwyg-tool-blockquote class="wysiwyg-tool"></wysiwyg-tool-blockquote>
+        <wysiwyg-tool-undo class="wysiwyg-tool"></wysiwyg-tool-undo>
+        <wysiwyg-tool-redo class="wysiwyg-tool"></wysiwyg-tool-redo>
+      </wysiwyg-e>
+    </paper-material>
+
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    Polymer({
+      is: 'internal-conf-letter',
+      properties: {
+        letter: {
+          type: String,
+          value: 'Aquí puede escribir su carta de despedida para sus familiares y amigos. Entendemos que este paso no es fácil y por ello puede finalizar la configuración y redactar esta carta en otro momento.'
+        }
+      }
+
+    });
+  })();
+  </script>
+</dom-module>

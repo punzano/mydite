@@ -1,0 +1,201 @@
+<dom-module id="registro-mydite">
+  <template>
+    <style is="custom-style" include="iron-flex iron-flex-alignment iron-positioning"></style>
+    <style>
+      :host{ font-family: ubuntu-regular; }
+      paper-dropdown-menu{
+        --paper-input-container-color: #212121;
+        --paper-input-container-input-color: black;
+        --paper-input-container-invalid-color: red;
+        --paper-input-container-focus-color: #3F51B5;
+        --paper-input-container-underline:{ background: #fff; }
+        --paper-dropdown-menu-input:{
+          font-size: 16px;
+          font-family: ubuntu-regular;
+        }
+      }
+      paper-listbox{ width: 100%; }
+      .config{
+        font-size: 16px;
+        background: var(--light-primary-color);
+        margin: 2% 10%;
+      }
+
+      .config-content{ padding: 1% 10% 1% 10%; }
+
+      /* BREAKPOINTS */
+      /* Computers */
+      @media all and (min-width: 960px) and (max-width: 1024px){}
+      /* Tablets */
+      @media all and (min-width: 601px) and (max-width: 960px){}
+      /* Moviles */
+      @media all and (min-width: 0) and (max-width: 768px){
+        .config-content{ padding: 0 10% 5% 10%; }
+      }
+      @media all and (min-width: 0) and (max-width: 600px){
+        .config{ font-size: 12px; }
+      }
+    </style>
+
+    <firebase-auth
+      id="firebaseSignUp"
+      user="infoUsuario"
+      status-known="{{statusKnown}}"
+      location="https://mydite.firebaseio.com/"
+      provider="password"
+      params="{{parametros}}"
+      on-error="mensajeErrorAutenticacion"
+      on-user-created="mensajeUsuarioCreado"
+      on-user-removed="mensajeUsuarioEliminado"
+      on-login="accionesLogueado"
+      on-logout="accionesLogout">
+    </firebase-auth>
+
+    <iron-media-query query="(max-width: 768px)" query-matches="{{isAtLast768px}}"></iron-media-query>
+    <iron-media-query query="(min-width: 768px)" query-matches="{{isAtLeast768px}}"></iron-media-query>
+
+    <template is="dom-if" if="{{_showConfig()}}">
+      <paper-material elevation="3" class="config">
+        <div class="config-content vertical layout">
+          <template is="dom-if" if="{{isAtLast768px}}">
+            <paper-dropdown-menu class=".dropdown-trigger" label="Tipo de usuario">
+              <paper-listbox class="dropdown-content" selected="{{userType}}">
+                <paper-item>Particular</paper-item>
+                <paper-item>Empresa</paper-item>
+              </paper-listbox>
+            </paper-dropdown-menu>
+            <template id="userTypeTemplate" is="dom-if" if="{{isParticular}}">
+              <paper-dropdown-menu class=".dropdown-trigger" label="Tipo de registro">
+                <paper-listbox class="dropdown-content" selected="{{registerType}}">
+                  <paper-item>Gratuito</paper-item>
+                  <paper-item>Anual</paper-item>
+                  <paper-item>Pago único</paper-item>
+                </paper-listbox>
+              </paper-dropdown-menu>
+            </template>
+          </template>
+
+          <template is="dom-if" if="{{isAtLeast768px}}">
+            <div class="horizontal center layout">
+              <label id="label1"><b>Tipo de usuario:</b></label>
+              <paper-radio-group id="userTypeSelection" class="horizontal wrap layout" selected="{{userType}}" aria-labelledby="label1">
+                <paper-radio-button name="Particular">Particular</paper-radio-button>
+                <paper-radio-button name="Empresa">Empresa</paper-radio-button>
+              </paper-radio-group>
+            </div>
+            <template id="userTypeTemplate" is="dom-if" if="{{isParticular}}">
+              <div class="horizontal center layout">
+                <label id="label2"><b>Tipo de registro:</b></label>
+                <paper-radio-group class="horizontal center-center wrap layout" selected="{{registerType}}" aria-labelledby="label2">
+                  <paper-radio-button name="Gratuito">Gratuito</paper-radio-button>
+                  <paper-radio-button name="Anual">Anual</paper-radio-button>
+                  <paper-radio-button name="Pago único">Pago único</paper-radio-button>
+                </paper-radio-group>
+              </div>
+            </template>
+          </template>
+        </div>
+      </paper-material>
+    </template>
+
+    <template id="userTypeTemplate" is="dom-if" if="{{isParticularAndFree}}">
+      <free-signup></free-signup>
+    </template>
+    <template id="userTypeTemplate" is="dom-if" if="{{isParticularAndAnual}}">
+      <anual-signup></anual-signup>
+    </template>
+    <template id="userTypeTemplate" is="dom-if" if="{{isParticularAndSinglePayment}}">
+      <singlePayment-signup></singlePayment-signup>
+    </template>
+
+    <template id="userTypeTemplate" is="dom-if" if="{{isCompany}}">
+      <company-signup></company-signup>
+    </template>
+
+
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    Polymer({
+      is: 'registro-mydite',
+      properties: {
+        userType: {
+          type: String,
+          value: 'Particular',
+          observer: 'toggleRegisterType'
+        },
+        registerType: {
+          type: String,
+          value: 'Gratuito',
+          observer: 'setTemplatesVariables'
+        },
+        isParticular: {
+          type: Boolean,
+          value: true
+        },
+        isCompany: {
+          type: Boolean,
+          value: false
+        },
+        isParticularAndFree: {
+          type: Boolean,
+          value: true
+        },
+        isParticularAndSinglePayment: {
+          type: Boolean,
+          value: false
+        },
+        isParticularAndAnual: {
+          type: Boolean,
+          value: false
+        }
+      },
+
+      toggleRegisterType: function(){
+        var ironMeta = document.querySelector('#signUpType');
+        var isCompanySignUp = ironMeta != null && ironMeta.byKey('signUpType') == 'sign-up-company';
+        if(this.isParticular || isCompanySignUp){
+          this.isParticular = false;
+          this.isCompany = true;
+          this.isParticularAndFree = false;
+          this.isParticularAndSinglePayment = false;
+          this.isParticularAndAnual = false;
+        }
+        else if(!this.isParticular || !isCompanySignUp){
+          this.isParticular = true;
+          this.isCompany = false;
+          this.isParticularAndFree = true;
+        }
+      },
+
+      setTemplatesVariables: function(){
+        var ironMeta = document.querySelector('#signUpType');
+        var isFreeSignUp = ironMeta != null && ironMeta.byKey('signUpType') == 'sign-up-free';
+        var isAnualSignUp = ironMeta != null && ironMeta.byKey('signUpType') == 'sign-up-anual';
+        var isSinglePaymentSignUp = ironMeta != null && ironMeta.byKey('signUpType') == 'sign-up-singlePayment';
+        if((this.registerType == 'Gratuito' && ironMeta == null) || isFreeSignUp){
+          this.isParticularAndFree = true;
+          this.isParticularAndSinglePayment = false;
+          this.isParticularAndAnual = false;
+        }
+        else if((this.registerType == 'Anual' && ironMeta == null) || isAnualSignUp){
+          this.isParticularAndAnual = true;
+          this.isParticularAndFree = false;
+          this.isParticularAndSinglePayment = false;
+        }
+        else if((this.registerType == 'Pago único' && ironMeta == null) || isSinglePaymentSignUp){
+          this.isParticularAndSinglePayment = true;
+          this.isParticularAndFree = false;
+          this.isParticularAndAnual = false;
+        }
+      },
+
+      _showConfig: function(){
+        return document.querySelector('#signUpType') == null;
+      }
+
+    });
+  })();
+  </script>
+</dom-module>

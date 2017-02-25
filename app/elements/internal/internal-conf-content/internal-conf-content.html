@@ -1,0 +1,189 @@
+<dom-module id="internal-conf-content">
+  <template>
+    <style is="custom-style" include="iron-flex iron-flex-reverse iron-flex-alignment iron-positioning"></style>
+    <style>
+      .associates-to-networks, .networks-to-letter, .finish-config{
+        color: #3F51B5;
+        font-size: 18px;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        background-color: transparent;
+      }
+      .associates-to-networks[disabled], .networks-to-letter[disabled]{
+        color: grey;
+      }
+
+      .networks-to-associates, .letter-to-networks{
+        color: #3F51B5;
+        font-size: 18px;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        background-color: transparent;
+      }
+
+      .confirmation-dialog{
+        border: 3px solid;
+        max-width: 50%;
+      }
+      .confirmation-dialog .buttons-container{
+        margin-top: 10px;
+      }
+    </style>
+
+
+    <internal-conf-associates id="internal-conf-associates"></internal-conf-associates>
+    <internal-conf-networks id="internal-conf-networks" style="display: none"></internal-conf-networks>
+    <internal-conf-letter id="internal-conf-letter" style="display: none"></internal-conf-letter>
+
+    <div id="associatesPagination">
+      <paper-button id="fromAssociatesToNetworks" class="associates-to-networks" on-click="associatesToNetworks" disabled>
+        <span>Siguiente</span>
+        <iron-icon icon="chevron-right"></iron-icon>
+      </paper-button>
+    </div>
+
+    <div id="networksPagination" style="display: none">
+      <paper-button id="fromNetworksToAssociates" class="networks-to-associates" on-click="networksToAssociates">
+        <iron-icon icon="chevron-left"></iron-icon>
+        <span>Anterior</span>
+      </paper-button>
+      <paper-button id="fromNetworksToLetter" class="networks-to-letter" on-click="networksToLetter" disabled>
+        <span>Siguiente</span>
+        <iron-icon icon="chevron-right"></iron-icon>
+      </paper-button>
+    </div>
+
+    <div id="letterPagination" style="display: none">
+      <paper-button id="fromLetterToNetworks" class="letter-to-networks" on-click="letterToNetworks">
+        <iron-icon icon="chevron-left"></iron-icon>
+        <span>Anterior</span>
+      </paper-button>
+      <paper-button id="finishConfig" class="finish-config" on-click="submitAndFinish">
+        <span>Finalizar</span>
+      </paper-button>
+    </div>
+
+    <paper-dialog id="confirmationDialog" class="confirmation-dialog" modal entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+      <div class="confirm-container vertical layout">
+        <span>Los datos serán almacenados en el sistema. Más adelante podrá modificar la información introducida.</span>
+        <span>
+          Tenga en cuenta que al finalizar este proceso, un mail será enviado a cada uno de los asociados que ha introducido, informándoles de que usted se ha registrado
+          en nuestra aplicación y que desea que sean ellos los encargados de cerrar sus cuentas digitales.
+        </span>
+        <div class="buttons-container horizontal justified center layout">
+          <paper-button class="horizontal center-center layout" dialog-dismiss on-click="closeDialog">
+            Cancelar
+            <iron-icon icon="cancel"></iron-icon>
+          </paper-button>
+          <paper-button class="horizontal center-center layout" dialog-confirm on-click="sendConfiguration">
+            Continuar
+            <iron-icon icon="check-circle"></iron-icon>
+          </paper-button>
+        </div>
+
+      </div>
+    </paper-dialog>
+
+    <paper-toast-error id="errorInServer"
+      text="Ha habido un problema en servidor al registrar sus datos. Por favor, vuelva a intentarlo. Si el error persiste póngase en contacto con nosotros
+      a través del email v.punzano@gmail.com">
+    </paper-toast-error>
+    <paper-toast id="userConfigUpdated" class="fit-bottom horizontal center justified layout" duration="2000">
+      <span id="label">Su configuración ha sido guardada con éxito.</span>
+      <!-- <paper-icon-button class="toast-close-button" icon="cancel" on-click="closePaperToastUserCreated"></paper-icon-button> -->
+    </paper-toast>
+
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    Polymer({
+      is: 'internal-conf-content',
+      properties: {
+      },
+
+      associatesToNetworks: function(){
+        $('#internal-conf-associates').hide();
+        $('#internal-conf-networks').show();
+        $('#associatesPagination').hide();
+        $('#networksPagination').show();
+      },
+
+      networksToAssociates: function(){
+        $('#internal-conf-associates').show();
+        $('#internal-conf-networks').hide();
+        $('#associatesPagination').show();
+        $('#networksPagination').hide();
+      },
+
+      networksToLetter: function(){
+        $('#internal-conf-letter').show();
+        $('#internal-conf-networks').hide();
+        $('#letterPagination').show();
+        $('#networksPagination').hide();
+      },
+
+      letterToNetworks: function(){
+        $('#internal-conf-letter').hide();
+        $('#internal-conf-networks').show();
+        $('#letterPagination').hide();
+        $('#networksPagination').show();
+      },
+
+      submitAndFinish: function(){
+        this.$.confirmationDialog.open();
+      },
+
+      sendConfiguration: function(){
+        var login = document.querySelector('#firebaseLogin');
+        var associates = $('.associate-section:not(#addAssociateSection)');
+        var networks = $('.network-section:not(#addNetworkSection)');
+        var clientConf = {
+          clientUID: document.querySelector('#firebaseLogin').user.auth.uid,
+          socialNetworks: [],
+          associates: [],
+          farewellLetter: '<div>' + $('#wysiwyg #content #editable').html() + '</div>'
+        };
+
+        $.each(associates, function(i, associate){
+          clientConf.associates.push({
+            name: associate.children[1].textContent,
+            surname: associate.children[2].textContent,
+            email: associate.children[3].textContent
+          });
+        });
+        $.each(networks, function(i, network){
+          clientConf.socialNetworks.push({
+            name: network.children[1].textContent,
+            url: network.children[2].textContent,
+            wish: network.children[3].textContent
+          });
+        });
+
+        $.ajax({
+          type: "POST",
+          url: "/saveUserConfig",
+          data: clientConf,
+          error: function(xhr, ajaxOptions, thrownError){
+            document.querySelector('#errorInServer').openToast();
+          },
+          success: function(msg) {
+            document.querySelector('#userConfigUpdated').open();
+            $('body').children('internal-conf-template#internal-conf-template').remove();
+            var component = document.createElement('internal-template');
+            component.setAttribute('id', 'internal-template');
+            document.querySelector('body').appendChild(component);
+          }
+        });
+      },
+
+      closeDialog: function(){
+        this.$.confirmationDialog.close();
+      }
+
+    });
+  })();
+  </script>
+</dom-module>

@@ -1,0 +1,222 @@
+<dom-module id="internal-conf-networks">
+  <template>
+    <style is="custom-style" include="iron-flex iron-flex-reverse iron-flex-alignment iron-positioning"></style>
+    <style>
+      paper-input, vaadin-date-picker, gold-zip-input, gold-phone-input, paper-dropdown-menu{
+        --paper-input-container-color: #212121;
+        --paper-input-container-input-color: black;
+        --paper-input-container-invalid-color: red;
+        --paper-input-container-focus-color: #3F51B5;
+        --paper-input-container-underline:{ background: #fff; }
+        --paper-input-container-label:{
+          font-size: 16px;
+          font-family: ubuntu-regular;
+        }
+      }
+      h2{
+        font-family: ubuntu-medium-italic;
+        height: 28%;
+      }
+      paper-listbox{
+        border: 2px solid;
+        padding: 0;
+        background-color: #fff;
+      }
+      paper-listbox paper-item{ border: 1px solid; }
+      paper-listbox paper-item.iron-selected{ color: #3F51B5; }
+
+      .network-config{
+        height: 100%;
+        width: 100%;
+      }
+
+      .networks-section{ width: 100%; }
+
+      .network-section{
+        width: 15%;
+        height: 35%;
+      }
+      .network-section #addNetworkButton.network-button{
+        cursor: pointer;
+      }
+      .network-section .network-button{
+        width: 150px;
+        height: 145px;
+        border: 3px solid #3f51b5;
+        border-radius: 15px;
+        background-color: #fff;
+      }
+      .network-section .network-button .rows-container{
+        height: 100%;
+        width: 100%;
+        padding: 0 7px;
+      }
+      .network-section .network-button .rows-container .row{ width: 100%; }
+      .network-section .network-button .rows-container .row.row-top{ padding-top: 7px; }
+      .network-section .network-button .rows-container .row.row-bottom{ padding-bottom: 7px; }
+      .network-section .network-button .rows-container .row .fa{ font-size: 35px; }
+      .network-section .network-button .rows-container .row .fa.fa-plus{
+        font-size: 65px;
+        padding-top: 4%;
+      }
+      .network-section .network-button .delete-network{
+        position: absolute;
+        top: -20px;
+        right: -20px;
+        border-radius: 50%;
+        color: #fff;
+        background-color: #333;
+      }
+      .network-section .network-button .network{ font-size: 110px; }
+      .network-section span{ text-align: center; }
+
+      .add-network-dialog{
+        width: 40%;
+        height: 45%;
+        opacity: 0.9;
+        border: 3px solid;
+        border-radius: 15px;
+      }
+      .add-network-dialog h2{
+        margin: 10px 0;
+        height: auto;
+      }
+      .add-network-dialog .add-network-form{ margin-top: 0; }
+      .add-network-dialog paper-icon-button[icon="close"]{
+        width: 35px;
+        height: 35px;
+        top: -17px;
+        right: -17px;
+        margin-top: 0;
+        position: absolute;
+        color: #fff;
+        background-color: #212121;
+        border-radius: 50%;
+      }
+      .add-network-dialog .confirm-container{ margin-top: 10px; }
+      .add-network-dialog .confirm-container paper-icon-button{
+        width: 50px;
+        height: 50px;
+      }
+    </style>
+
+    <div id="networkConfig" class="network-config vertical center layout">
+      <h2>CONFIGURACIÓN DE REDES SOCIALES</h2>
+      <div id="networksSection" class="networks-section horizontal center-center layout">
+        <div id="addNetworkSection" class="network-section vertical center layout">
+          <paper-material id="addNetworkButton" class="network-button horizontal center-center layout" elevation="4" on-click="openAddNetworkForm">
+            <paper-ripple center></paper-ripple>
+            <div class="rows-container vertical justified center layout">
+              <div class="row row-top horizontal justified center layout">
+                <i class="fa fa-facebook-square" aria-hidden="true"></i>
+                <i class="fa fa-twitter-square" aria-hidden="true"></i>
+                <i class="fa fa-github-square" aria-hidden="true"></i>
+              </div>
+              <div class="row horizontal justified center layout">
+                <i class="fa fa-google-plus-square" aria-hidden="true"></i>
+                <i class="fa fa-plus" aria-hidden="true"></i>
+                <i class="fa fa-youtube-square" aria-hidden="true"></i>
+              </div>
+              <div class="row row-bottom horizontal justified center layout">
+                <i class="fa fa-instagram" aria-hidden="true"></i>
+                <i class="fa fa-flickr" aria-hidden="true"></i>
+                <i class="fa fa-linkedin-square" aria-hidden="true"></i>
+              </div>
+            </div>
+          </paper-material>
+          <span>Añadir red social</span>
+        </div>
+      </div>
+    </div>
+
+    <paper-dialog id="addNetworkDialog" class="add-network-dialog" modal entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+      <h2 class="horizontal center-center layout">Añadir nueva red social</h2>
+      <div id="addNetworkForm" class="add-network-form vertical layout">
+        <paper-dropdown-menu id="networkDropdown" label="Red Social">
+          <paper-listbox class="dropdown-content">
+            <paper-item>Facebook</paper-item>
+            <paper-item>Twitter</paper-item>
+            <paper-item>Instagram</paper-item>
+            <paper-item>Google</paper-item>
+          </paper-listbox>
+        </paper-dropdown-menu>
+        <paper-input id="url"
+          label="URL de usuario"
+          type="text">
+        </paper-input>
+        <paper-dropdown-menu id="wishDropdown" label="Deseo">
+          <paper-listbox class="dropdown-content">
+            <paper-item>Cierre de cuenta</paper-item>
+            <paper-item>Convertir en cuenta conmemorativa</paper-item>
+          </paper-listbox>
+        </paper-dropdown-menu>
+      </div>
+      <paper-icon-button icon="close" dialog-dismiss on-click="resetNetworkAdditionForm"></paper-icon-button>
+      <div class="confirm-container horizontal center-center layout">
+        <paper-icon-button icon="check-circle" class="horizontal center-center layout" dialog-confirm on-click="createNewNetworkSection"></paper-icon-button>
+      </div>
+    </paper-dialog>
+
+    <paper-toast-error id="fillAllFields" text="Deben rellenarse todos los campos del formulario"></paper-toast-error>
+
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    Polymer({
+      is: 'internal-conf-networks',
+      properties: {
+      },
+
+      resetNetworkAdditionForm: function(){
+        // document.querySelector('#networkDropdown paper-input').value = "";
+        document.querySelector('#networkDropdown paper-listbox').select(null);
+        this.$.url.value = "";
+        $('#addNetworkForm #url #labelAndInputContainer').css('position', 'relative');
+        // document.querySelector('#wishDropdown paper-input').value = "";
+        document.querySelector('#wishDropdown paper-listbox').select(null);
+      },
+
+      openAddNetworkForm: function(){
+        this.$.addNetworkDialog.open();
+      },
+
+      createNewNetworkSection: function(){
+        if(this.$.networkDropdown.value == "" || this.$.url.value == "" || this.$.wishDropdown.value == "")
+          this.$.fillAllFields.openToast();
+        else{
+          var iconText;
+          if(this.$.networkDropdown.value == 'Facebook') iconText = 'facebook-square';
+          else if(this.$.networkDropdown.value == 'Twitter') iconText = 'twitter-square';
+          else if(this.$.networkDropdown.value == 'Instagram') iconText = 'instagram';
+          else iconText = 'google-plus-square';
+          $('#networksSection').prepend(
+            '<div id="networkSection" class="network-section vertical center layout internal-conf-networks">' +
+              '<paper-material class="network-button vertical center-center layout internal-conf-networks" elevation="3">' +
+                '<paper-icon-button class="delete-network internal-conf-networks" icon="delete"></paper-icon-button>' +
+                '<i class="fa fa-' + iconText + ' internal-conf-networks network" aria-hidden="true"></i>' +
+              '</paper-material>' +
+              '<span class="network-name internal-conf-networks">' + this.$.networkDropdown.value + '</span>' +
+              '<span class="network-url internal-conf-networks" style="display:none">' + this.$.url.value + '</span>' +
+              '<span class="network-wish internal-conf-networks" style="display:none">' +this.$.wishDropdown.value + '</span>' +
+            '</div>'
+          );
+          if($('#networkSection').length >= 1)
+            document.querySelector('#fromNetworksToLetter').disabled = false;
+          var self = this;
+          document.querySelector('.delete-network.internal-conf-networks').addEventListener('click', function(e){
+            self.removeNetwork(e)
+          });
+          this.resetNetworkAdditionForm();
+        }
+      },
+
+      removeNetwork: function(e){
+        $(e.target.parentElement.parentElement.parentElement).remove();
+        if($('#networkSection').length < 1)
+          document.querySelector('#fromNetworksToLetter').disabled = true;
+      }
+    });
+  })();
+  </script>
+</dom-module>

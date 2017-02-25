@@ -1,0 +1,39 @@
+<dom-module id="paper-toast-error">
+  <template>
+    <style is="custom-style" include="iron-flex iron-flex-alignment iron-positioning"></style>
+    <style>
+      :host{ font-size: 16px; }
+      .toast-element{ font-size: 16px; }
+      .toast-warning-button{ color: red; }
+    </style>
+
+    <paper-toast id="toastElement" class="toast-element fit-bottom horizontal center justified layout" duration="0">
+      <div class="horizontal center-center layout">
+        <iron-icon class="toast-warning-button" icon="warning"></iron-icon>
+        <span id="label">&nbsp;&nbsp;{{text}}</span>
+      </div>
+      <paper-icon-button class="toast-close-button" icon="cancel" on-click="toggleToast"></paper-icon-button>
+    </paper-toast>
+
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    Polymer({
+      is: 'paper-toast-error',
+      properties: {
+        text: {
+          type: String,
+          value: ''
+        }
+      },
+      openToast: function(){
+        this.$.toastElement.open();
+      },
+      toggleToast: function(){
+        this.$.toastElement.toggle()
+      }
+    });
+  })();
+  </script>
+</dom-module>

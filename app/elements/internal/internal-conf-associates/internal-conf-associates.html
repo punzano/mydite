@@ -1,0 +1,201 @@
+<link rel="import" href="../../../bower_components/neon-animation/animations/scale-up-animation.html">
+<link rel="import" href="../../../bower_components/neon-animation/animations/fade-out-animation.html">
+<dom-module id="internal-conf-associates">
+  <template>
+    <style is="custom-style" include="iron-flex iron-flex-reverse iron-flex-alignment iron-positioning"></style>
+    <style>
+      paper-input, vaadin-date-picker, gold-zip-input, gold-phone-input{
+        --paper-input-container-color: #212121;
+        --paper-input-container-input-color: black;
+        --paper-input-container-invalid-color: red;
+        --paper-input-container-focus-color: #3F51B5;
+        --paper-input-container-underline:{ background: #fff; }
+        --paper-input-container-label:{
+          font-size: 16px;
+          font-family: ubuntu-regular;
+        }
+      }
+      h2{
+        font-family: ubuntu-medium-italic;
+        height: 28%;
+      }
+
+      .associate-config{
+        height: 100%;
+        width: 100%;
+      }
+
+      .associates-section{ width: 100%; }
+
+      .associate-section{
+        width: 15%;
+        height: 35%;
+      }
+      .associate-section .associate-button{
+        width: 150px;
+        height: 145px;
+        margin: 0;
+        border: 3px solid #3f51b5;
+        border-radius: 15px;
+        background-color: #fff;
+      }
+      .associate-section #addAssociateButton.associate-button{
+        cursor: pointer;
+      }
+      .associate-section .associate-button .delete-associate{
+        position: absolute;
+        top: -20px;
+        right: -20px;
+        border-radius: 50%;
+        color: #fff;
+        background-color: #333;
+      }
+      .associate-section .associate-button i{
+        font-size: 110px;
+      }
+      .associate-section span{
+        text-align: center;
+      }
+
+      .add-associate-dialog{
+        width: 40%;
+        height: 45%;
+        opacity: 0.9;
+        border: 3px solid;
+        border-radius: 15px;
+      }
+      .add-associate-dialog h2{
+        margin: 10px 0;
+        height: auto;
+      }
+      .add-associate-dialog .add-associate-form{ margin-top: 0; }
+      .add-associate-dialog paper-icon-button[icon="close"]{
+        width: 35px;
+        height: 35px;
+        top: -17px;
+        right: -17px;
+        margin-top: 0;
+        position: absolute;
+        color: #fff;
+        background-color: #212121;
+        border-radius: 50%;
+      }
+      .add-associate-dialog .confirm-container{ margin-top: 10px; }
+      .add-associate-dialog .confirm-container paper-icon-button{
+        width: 50px;
+        height: 50px;
+      }
+    </style>
+
+    <div id="associateConfig" class="associate-config vertical center layout">
+      <h2>CONFIGURACIÓN DE ASOCIADOS</h2>
+      <div id="associatesSection" class="associates-section horizontal center-center layout">
+        <div id="addAssociateSection" class="associate-section vertical center layout">
+          <paper-material id="addAssociateButton" class="associate-button horizontal center-center layout" elevation="4" on-click="openAddAssociateForm">
+            <paper-ripple center></paper-ripple>
+            <i class="fa fa-user-plus" aria-hidden="true"></i>
+          </paper-material>
+          <span>Añadir asociado</span>
+        </div>
+      </div>
+    </div>
+
+    <paper-dialog id="addAssociateDialog" class="add-associate-dialog" modal entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+      <h2 class="horizontal center-center layout">Añadir nuevo asociado</h2>
+      <div id="addAssociateForm" class="add-associate-form vertical layout">
+        <paper-input id="name"
+          label="Nombre"
+          type="text"
+          auto-validate
+          pattern="[a-zA-Z\sáéíóú]{2,40}"
+          error-message="Debe contener al menos dos letras">
+        </paper-input>
+        <paper-input id="surname"
+          label="Apellidos"
+          type="text"
+          auto-validate
+          pattern="[a-zA-Z\sáéíóú]{2,40}[\s][a-zA-Z\sáéíóú]{2,40}"
+          error-message="Debe incluir los dos apellidos">
+        </paper-input>
+        <paper-input id="email"
+          label="Correo"
+          type="email"
+          auto-validate
+          error-message="El formato no coincide con el de un correo eléctronico">
+        </paper-input>
+      </div>
+      <paper-icon-button icon="close" dialog-dismiss on-click="resetUserAdditionForm"></paper-icon-button>
+      <div class="confirm-container horizontal center-center layout">
+        <paper-icon-button icon="check-circle" class="horizontal center-center layout" dialog-confirm on-click="createNewAssociateSection"></paper-icon-button>
+      </div>
+    </paper-dialog>
+
+    <paper-toast-error id="fillAllFields" text="Deben rellenarse todos los campos del formulario"></paper-toast-error>
+    <paper-toast-error id="maximumNumberOfMembersExceeded" text="El máximo número de asociados que puede vinclularse es 4"></paper-toast-error>
+    <paper-toast-error id="clientEmailNotAssociate" text="No puede introducirse a si mismo como asociado"></paper-toast-error>
+
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    Polymer({
+      is: 'internal-conf-associates',
+      properties: {
+
+      },
+
+      resetUserAdditionForm: function(){
+        this.$.name.value = "";
+        $('#addAssociateForm #name #labelAndInputContainer').css('position', 'relative');
+        this.$.surname.value = "";
+        $('#addAssociateForm #surname #labelAndInputContainer').css('position', 'relative');
+        this.$.email.value = "";
+        $('#addAssociateForm #email #labelAndInputContainer').css('position', 'relative');
+      },
+
+      openAddAssociateForm: function(){
+        if($('#associateSection').length == 4)
+          this.$.maximumNumberOfMembersExceeded.openToast();
+        else
+          this.$.addAssociateDialog.open();
+      },
+
+      createNewAssociateSection: function(){
+        if(this.$.name.value == "" || this.$.surname.value == "" || this.$.email.value == "")
+          this.$.fillAllFields.openToast();
+        else{
+          if(this.$.name.email == document.querySelector('#firebaseLogin').user.password.email){
+            this.$.clientEmailNotAssociate.openToast();
+          }
+          else{
+            $('#associatesSection').prepend(
+              '<div id="associateSection" class="associate-section vertical center layout internal-conf-associates">' +
+                '<paper-material class="associate-button vertical center-center layout internal-conf-associates" elevation="4">' +
+                  '<paper-icon-button class="delete-associate internal-conf-associates" icon="delete"></paper-icon-button>' +
+                  '<i class="fa fa-user internal-conf-associates" aria-hidden="true"></i>' +
+                '</paper-material>' +
+                '<span class="associate-name internal-conf-associates">' + this.$.name.value + '</span>' +
+                '<span class="associate-surname internal-conf-associates">' + this.$.surname.value + '</span>' +
+                '<span class="associate-email internal-conf-associates" style="display:none">' + this.$.email.value + '</span>' +
+              '</div>'
+            );
+            if($('#associateSection').length >= 1)
+              document.querySelector('#fromAssociatesToNetworks').disabled = false;
+            var self = this;
+            document.querySelector('.delete-associate.internal-conf-associates').addEventListener('click', function(e){
+              self.removeAssociate(e)
+            });
+          }
+          this.resetUserAdditionForm();
+        }
+      },
+
+      removeAssociate: function(e){
+        $(e.target.parentElement.parentElement.parentElement).remove();
+        if($('#associateSection').length < 1)
+          document.querySelector('#fromAssociatesToNetworks').disabled = true;
+      }
+    });
+  })();
+  </script>
+</dom-module>

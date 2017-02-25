@@ -1,0 +1,62 @@
+<dom-module id="external-footer">
+  <template>
+    <style is="custom-style" include="iron-flex iron-flex-alignment iron-positioning"></style>
+    <style>
+      h4{
+        margin: 0;
+        padding: 5px 0;
+      }
+
+      .footer-container{
+        background: var(--dark-primary-to-light-primary-down-to-up);
+        width: 100%;
+        box-shadow: 0 -4px 4px rgba(0, 0, 0, 0.4);
+      }
+
+      .social-icons img{
+        margin-right: 4px;
+      }
+    </style>
+
+    <div id="footerContainer" class="footer-container horizontal around-justified layout">
+      <div class="vertical layout">
+        <h4>MÁS INFORMACIÓN</h4>
+        <a href="">Link 1</a>
+        <a href="">Link 2</a>
+        <a href="">Link 3</a>
+        <a href="">Link 4</a>
+      </div>
+      <div class="vertical layout">
+        <h4>ACERCA DE NOSOTROS</h4>
+        <a href="">Link 1</a>
+        <a href="">Link 2</a>
+        <a href="">Link 3</a>
+      </div>
+      <div class="vertical layout">
+        <h4>LEGAL</h4>
+        <a href="">Link 1</a>
+        <a href="">Link 2</a>
+      </div>
+      <div class="vertical layout">
+        <h4>SíGUENOS</h4>
+        <div class="social-icons horizontal justified layout">
+          <img src="../../../images/facebook-Icon.png" alt="Facebook" width="25" height="25">
+          <img src="../../../images/twitter-icon.png" alt="Twitter" width="25" height="25">
+          <img src="../../../images/linkedin-icon.png" alt="LinkedIn" width="25" height="25">
+          <img src="../../../images/youtube-icon.ico" alt="Youtube" width="25" height="25">
+        </div>
+      </div>
+    </div>
+
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    Polymer({
+      is: 'external-footer',
+      properties: {
+      }
+    });
+  })();
+  </script>
+</dom-module>

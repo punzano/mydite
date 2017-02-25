@@ -1,0 +1,66 @@
+<dom-module id="internal-header">
+  <template>
+    <style is="custom-style" include="iron-flex iron-flex-reverse iron-flex-alignment iron-positioning"></style>
+    <style>
+      /* MAIN */
+      .main-toolbar{
+        width: 100%;
+      }
+      /* Title */
+      .app-title{
+        width: 50%;
+      }
+      .app-title .logo{
+        height: 90%;
+        width: 10%;
+      }
+      .app-title .app-name {
+        font-size: 20px;
+        text-transform: uppercase;
+        text-shadow: 1px 2px 1px rgba(0, 0, 0, 1);
+        width: 100%;
+      }
+
+      /* BREAKPOINTS */
+      /* Computers */
+      @media all and (min-width: 960px) and (max-width: 1024px){
+        .app-title{ width: 50%; }
+        .app-title .app-name { font-size: 18px; }
+      }
+      /* Tablets */
+      @media all and (min-width: 769px) and (max-width: 960px){
+        .app-title .app-name { font-size: 17px; }
+      }
+
+       /* Moviles */
+      @media all and (min-width: 0) and (max-width: 768px){
+        .app-title .app-name {
+          font-size: 16px;
+          font-weight: 400;
+        }
+      }
+
+    </style>
+
+    <div id="mainToolbar" class="main-toolbar horizontal justified layout">
+      <!-- Application name -->
+      <div id="appTitle" class="app-title layout horizontal center">
+        <iron-icon id="logo" class="logo" src="../../../images/logo/mydite-logo-72x72.PNG"></iron-icon>
+        <div class="app-name">My Digital Testament</div>
+      </div>
+
+      <user-icon-button></user-icon-button>
+    </div>
+
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    Polymer({
+      is: 'internal-header',
+      properties: {
+      }
+    });
+  })();
+  </script>
+</dom-module>

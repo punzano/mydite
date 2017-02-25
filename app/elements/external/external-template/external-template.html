@@ -1,0 +1,68 @@
+<dom-module id="external-template">
+  <template>
+    <style is="custom-style" include="iron-flex iron-flex-alignment iron-positioning"></style>
+    <style>
+      paper-toolbar{
+        background: var(--dark-primary-to-light-primary-up-to-down);
+        -moz-box-shadow: 0 4px 4px rgba(0, 0, 0, 0.4);
+        -webkit-box-shadow: 0 4px 4px rgba(0, 0, 0, 0.4);
+        box-shadow: 0 4px 4px rgba(0, 0, 0, 0.4);
+      }
+
+      paper-scroll-header-panel {
+        height: 100%;
+      }
+
+      external-header{
+        width: 100%;
+      }
+
+      /* DRAWER */
+      #drawerToolbar {
+        color: var(--secondary-text-color);
+        background-color: var(--drawer-menu-color);
+        border-bottom: var(--drawer-toolbar-border-color);
+      }
+
+      #drawerToolbar .menu-name {
+        @apply(--paper-font-title);
+        color: #fff;
+      }
+    </style>
+
+    <paper-drawer-panel id="paperDrawerPanel" force-narrow responsive-width="768px">
+      <!-- Drawer Scroll Header Panel -->
+      <paper-scroll-header-panel drawer fixed id="drawer-scroll-header-panel">
+        <!-- Drawer Toolbar -->
+        <paper-toolbar id="drawerToolbar" class="horizontal center-center layout">
+          <span class="menu-name">Menú</span>
+        </paper-toolbar>
+        <!-- Drawer Content -->
+        <external-menu url="{{route}}"></external-menu>
+      </paper-scroll-header-panel>
+      <!-- Main Area -->
+      <paper-scroll-header-panel id="headerPanelMain" class="vertical fit layout" main fixed>
+        <!-- Main Toolbar -->
+        <paper-toolbar id="mainToolbar">
+          <external-header url="{{route}}"></external-header>
+        </paper-toolbar>
+        <!-- Main Content -->
+        <div class="content">
+          <external-content url="{{route}}" signuptype="undefined"></external-content>
+        </div>
+        <external-footer></external-footer>
+      </paper-scroll-header-panel>
+    </paper-drawer-panel>
+
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    Polymer({
+      is: 'external-template',
+      properties: {
+      }
+    });
+  })();
+  </script>
+</dom-module>
